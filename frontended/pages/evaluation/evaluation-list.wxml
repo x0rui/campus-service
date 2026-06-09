@@ -1,0 +1,24 @@
+<view class="container">
+  <view class="tab-bar flex-row mb-20">
+    <view class="tab-item {{currentTab === 0 ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="0">我收到的</view>
+    <view class="tab-item {{currentTab === 1 ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="1">我给出的</view>
+  </view>
+
+  <view wx:if="{{evaluations.length === 0}}" class="empty-state"><text>暂无评价</text></view>
+
+  <view class="card" wx:for="{{evaluations}}" wx:key="evalId" style="margin-bottom:16rpx">
+    <view class="flex-row flex-between">
+      <text class="text-bold">{{item._otherName || '微信用户'}}</text>
+      <text class="text-primary">{{item.score}}分</text>
+    </view>
+    <view class="flex-row mt-5" style="gap:4rpx">
+      <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this"
+            style="font-size:24rpx;{{index<item.score?'color:var(--primary)':'color:var(--text-muted)'}}">★</text>
+    </view>
+    <view class="text-sm text-gray mt-10" wx:if="{{item.content}}">{{item.content}}</view>
+    <view class="flex-row flex-between mt-10">
+      <text class="text-sm text-gray">{{item.orderType === 0 ? '跑腿' : item.orderType === 1 ? '闲置' : item.orderType === 2 ? '组局' : '社团'}}</text>
+      <text class="text-sm text-gray" wx:if="{{currentTab === 1 && item.isAnonymous === 1}}">匿名评价</text>
+    </view>
+  </view>
+</view>

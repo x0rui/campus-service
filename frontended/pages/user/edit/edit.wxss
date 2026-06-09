@@ -1,0 +1,90 @@
+/* 编辑资料页 - 统一卡片式表单 */
+.edit-card { padding: 0; overflow: hidden; }
+
+/* 头像区域 */
+.edit-avatar-section {
+  padding: 32rpx 32rpx 24rpx;
+  border-bottom: 2rpx solid var(--border);
+  display: flex; align-items: center; gap: 24rpx;
+}
+.edit-avatar-wrap {
+  width: 88rpx; height: 88rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--primary-light), #FFE8E0);
+}
+.edit-avatar-letter { font-size: 36rpx; font-weight: 700; color: var(--primary); }
+.edit-avatar-actions { display: flex; flex-direction: column; gap: 12rpx; }
+.edit-avatar-btn {
+  font-size: 22rpx; padding: 8rpx 24rpx; border-radius: var(--radius-sm);
+  display: inline-block; text-align: center;
+}
+.edit-avatar-btn-primary { background: var(--primary); color: #fff; }
+.edit-avatar-btn-outline { background: var(--primary-light); color: var(--primary); border: 2rpx solid var(--primary); }
+
+/* 表单主体 */
+.edit-body { padding: 28rpx 32rpx; }
+
+/* 表单项容器 */
+.edit-field { margin-bottom: 28rpx; }
+.edit-field:last-child { margin-bottom: 0; }
+.edit-field-half { flex: 1; }
+
+/* 标签 */
+.edit-label {
+  display: block; font-size: 24rpx; font-weight: 500;
+  color: var(--text-secondary); margin-bottom: 10rpx;
+}
+
+/* 输入框统一风格 */
+.edit-input {
+  width: 100%; height: 76rpx;
+  background: var(--card-bg);
+  border: 2rpx solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: var(--text);
+  box-sizing: border-box;
+  display: flex; align-items: center;
+}
+.edit-input:focus, .edit-input-active { border-color: var(--primary); }
+
+/* 复选框式输入 */
+.edit-textarea {
+  background: var(--card-bg);
+  border: 2rpx solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  width: 100%;
+  min-height: 140rpx;
+  color: var(--text);
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+/* 两列并排 */
+.edit-row { display: flex; gap: 24rpx; margin-bottom: 28rpx; }
+.edit-row:last-child { margin-bottom: 0; }
+
+/* 选择框统一样式 */
+.edit-select {
+  width: 100%; height: 76rpx;
+  background: var(--card-bg);
+  border: 2rpx solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: var(--text);
+  box-sizing: border-box;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* 兴趣标签 */
+.edit-hobby-input-row { display: flex; gap: 12rpx; margin-bottom: 12rpx; }
+.edit-hobby-tags { display: flex; gap: 10rpx; flex-wrap: wrap; }
+.edit-hobby-tag {
+  padding: 8rpx 22rpx; border-radius: 24rpx; font-size: 22rpx;
+  background: var(--primary-light); color: var(--primary-dark);
+}

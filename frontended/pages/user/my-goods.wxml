@@ -1,0 +1,13 @@
+<view class="container">
+  <view class="tab-bar flex-row mb-10">
+    <view class="tab-item {{goodsSubTab===0?'tab-active':''}}" bindtap="switchSubTab" data-tab="0">在售({{goodsCount.onSale||0}})</view>
+    <view class="tab-item {{goodsSubTab===1?'tab-active':''}}" bindtap="switchSubTab" data-tab="1">已售出({{goodsCount.sold||0}})</view>
+    <view class="tab-item {{goodsSubTab===2?'tab-active':''}}" bindtap="switchSubTab" data-tab="2">已下架({{goodsCount.offShelf||0}})</view>
+    <view class="tab-item {{goodsSubTab===3?'tab-active':''}}" bindtap="switchSubTab" data-tab="3">我买的({{goodsCount.bought||0}})</view>
+  </view>
+  <view wx:if="{{list.length===0}}" class="empty-state"><text>暂无</text></view>
+  <view class="card" wx:for="{{list}}" wx:key="goodsId" bindtap="goToDetail" data-id="{{item.goodsId}}">
+    <view class="flex-row flex-between"><text class="text-ellipsis flex-1">{{item.title}}</text><view class="tag {{item.status===0?'tag-success':item.status===1?'tag-primary':'tag-muted'}}">{{item.status===0?'在售':item.status===1?'已售出':'已下架'}}</view></view>
+    <view class="text-primary mt-10">¥{{item.price}}</view>
+  </view>
+</view>

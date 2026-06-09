@@ -1,0 +1,121 @@
+<view class="container" wx:if="{{team}}">
+  <!-- 组局信息 -->
+  <view class="card">
+    <view class="flex-row flex-between" style="align-items:flex-start">
+      <view class="flex-row" style="gap:10rpx;flex-wrap:wrap;flex:1">
+        <view class="tag tag-primary">{{team.tag}}</view>
+        <view class="tag {{team.status===0?'tag-success':'tag-muted'}}">{{team.status===0?'招募中':'已结束'}}</view>
+        <view bindtap="doReport" style="padding:2rpx 8rpx"><text style="font-size:20rpx;color:var(--text-muted)">举报</text></view>
+      </view>
+      <view wx:if="{{isCreator&&team.status===0}}" style="display:flex;gap:8rpx;flex-shrink:0">
+        <button class="btn-small" style="color:var(--tertiary);border:2rpx solid var(--tertiary);background:#fff;padding:8rpx 20rpx;font-size:24rpx" bindtap="editTeam">编辑</button>
+        <button class="btn-small" style="color:#FC8181;border:2rpx solid #FC8181;background:#fff;padding:8rpx 20rpx;font-size:24rpx" bindtap="cancelTeam">取消</button>
+      </view>
+    </view>
+    <view class="text-xl text-bold mt-10">{{team.title}}</view>
+    <view class="text-body mt-10" style="line-height:1.8">{{team.description}}</view>
+    <view wx:if="{{team.image}}" style="position:relative;margin-top:20rpx;border-radius:var(--radius-md);overflow:hidden">
+      <image src="{{team.image}}" mode="widthFix" style="width:100%;display:block" />
+      <view style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.5));padding:40rpx 24rpx 24rpx">
+        <text style="color:#fff;font-size:30rpx;font-weight:600;display:block">{{team.title}}</text>
+        <text wx:if="{{team.location}}" style="color:rgba(255,255,255,0.8);font-size:24rpx;display:block;margin-top:6rpx">{{team.location}}</text>
+      </view>
+    </view>
+    <view class="divider"></view>
+    <view class="flex-row" style="gap:24rpx;flex-wrap:wrap">
+      <view class="text-sm text-muted">{{team.currentMembers}}/{{team.maxMembers}}人</view>
+      <view wx:if="{{team.minMembers&&team.minMembers>1}}" class="text-sm text-muted">最少{{team.minMembers}}人成团</view>
+      <view wx:if="{{team.location}}" class="text-sm text-muted">{{team.location}}</view>
+      <view wx:if="{{team.startTime}}" class="text-sm text-muted">{{team.startTime.substring(0,16)}}</view>
+      <view wx:if="{{team.endTime}}" class="text-sm text-muted">→ {{team.endTime.substring(0,16)}}</view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{!isCreator&&team.status===0}}">
+    <button class="btn-primary" bindtap="applyJoin">申请加入</button>
+  </view>
+
+  <!-- 签到（招募中或已满员都可以签到） -->
+  <view class="card" wx:if="{{isCreator&&(team.status===0||team.status===1)}}">
+    <view class="flex-row" style="gap:16rpx;align-items:stretch">
+      <view style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--primary-light);border-radius:var(--radius-md);padding:24rpx 16rpx;box-sizing:border-box">
+        <text wx:if="{{signCode}}" style="font-size:64rpx;font-weight:700;letter-spacing:12rpx;color:var(--primary)">{{signCode}}</text>
+        <text wx:else style="font-size:26rpx;color:var(--text-muted)">未生成签到码</text>
+      </view>
+      <button class="btn-small" style="background:var(--primary);color:#fff;padding:0 32rpx;font-size:26rpx;white-space:nowrap;display:flex;align-items:center;border-radius:var(--radius-md);height:auto;box-sizing:border-box" bindtap="generateCode">生成签到码</button>
+    </view>
+  </view>
+
+  <!-- 成员卡片 -->
+  <view class="card">
+    <view class="text-bold text-lg mb-10">成员 ({{members.length}}人)
+      <text wx:if="{{team.status!==0 && isCreator}}" class="text-xs text-muted"> 已签到{{checkedInCount}}人</text>
+    </view>
+    <view wx:if="{{members.length===0}}" class="text-sm text-muted">暂无成员</view>
+    <view class="list-item" wx:for="{{members}}" wx:key="joinId" style="display:flex;align-items:center;padding:16rpx 20rpx;margin-bottom:8rpx" bindtap="showMemberInfo" data-index="{{index}}">
+      <view style="width:64rpx;height:64rpx;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:hidden">
+        <text style="font-size:28rpx;color:var(--primary);font-weight:600">{{item._nickName?item._nickName[0]:'?'}}</text>
+        <image wx:if="{{item._avatarUrl}}" src="{{item._avatarUrl}}" mode="aspectFill" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%" binderror="onMemberAvatarError" data-index="{{index}}" />
+      </view>
+      <view style="margin-left:16rpx;flex:1">
+        <view class="flex-row" style="gap:8rpx">
+          <view class="text-sm text-bold">{{item._nickName||'用户'+item.userId}}</view>
+          <view wx:if="{{item.userId===team.userId}}" class="tag tag-warning" style="padding:1rpx 8rpx;font-size:16rpx">组局者</view>
+          <view wx:else class="tag tag-primary" style="padding:1rpx 8rpx;font-size:16rpx">成员</view>
+          <view wx:if="{{item.checkedIn===1}}" class="tag tag-success" style="padding:1rpx 8rpx;font-size:16rpx">已签到</view>
+        </view>
+        <view class="text-xs text-muted">{{item._gender}} {{item._grade}} {{item._hobbies}}</view>
+      </view>
+      <view class="flex-row" style="gap:8rpx;flex-shrink:0">
+        <button wx:if="{{item.userId!==userInfo.userId}}" class="btn-small" style="background:var(--primary);color:#fff;padding:8rpx 20rpx;font-size:24rpx" catchtap="contactMember" data-id="{{item.userId}}">联系</button>
+        <button wx:if="{{isCreator&&item.userId!==userInfo.userId}}" class="btn-small" style="color:#FC8181;border:2rpx solid #FC8181;background:#fff;padding:8rpx 20rpx;font-size:24rpx" catchtap="kickMember" data-id="{{item.userId}}">踢出</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{isCreator&&pendingJoins.length>0}}">
+    <view class="text-bold text-lg mb-10">待审核 ({{pendingJoins.length}})</view>
+    <view class="list-item" wx:for="{{pendingJoins}}" wx:key="joinId" style="display:flex;align-items:center;padding:14rpx 18rpx;margin-bottom:6rpx">
+      <view style="width:48rpx;height:48rpx;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:hidden;background:var(--primary-light)">
+        <text style="font-size:22rpx;color:var(--primary)">{{item._nickName?item._nickName[0]:'?'}}</text>
+        <image wx:if="{{item._avatarUrl}}" src="{{item._avatarUrl}}" mode="aspectFill" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%" />
+      </view>
+      <view style="margin-left:12rpx;flex:1">
+        <view class="text-sm text-bold">{{item._nickName||'用户'+item.userId}}</view>
+        <view class="text-xs text-muted">{{item._gender||''}} {{item._grade||''}} {{item._hobbies||''}}</view>
+      </view>
+      <view class="flex-row" style="gap:8rpx">
+        <button class="btn-small" style="background:#48BB78;color:#fff" bindtap="approveJoin" data-id="{{item.joinId}}" data-approved="true">通过</button>
+        <button class="btn-small" style="background:#FC8181;color:#fff" bindtap="approveJoin" data-id="{{item.joinId}}" data-approved="false">拒绝</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{!isCreator&&(team.status===0||team.status===1)}}">
+    <view class="text-bold text-lg mb-10">签到</view>
+    <view class="flex-row" style="gap:12rpx;align-items:stretch">
+      <input class="form-input" style="flex:1;height:72rpx;line-height:72rpx;padding:0 20rpx;font-size:26rpx;box-sizing:border-box" placeholder="输入签到码" value="{{signInput}}" bindinput="onSignInput" />
+      <button style="width:120rpx;height:72rpx;display:flex;align-items:center;justify-content:center;background:var(--primary);color:#fff;font-size:26rpx;border-radius:var(--radius-md);padding:0;box-sizing:border-box;flex-shrink:0" bindtap="checkIn">签到</button>
+    </view>
+  </view>
+
+  <!-- 评价成员（组局结束或满员后） -->
+  <view class="card" wx:if="{{team.status===1 || team.status===2}}">
+    <view class="text-bold text-lg mb-10">评价队友</view>
+    <view class="list-item" wx:for="{{members}}" wx:key="joinId" style="display:flex;align-items:center;padding:14rpx 18rpx;margin-bottom:6rpx" wx:if="{{item.userId!==userInfo.userId}}">
+      <view style="width:48rpx;height:48rpx;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:hidden">
+        <text style="font-size:22rpx;color:var(--primary)">{{item._nickName?item._nickName[0]:'?'}}</text>
+        <image wx:if="{{item._avatarUrl}}" src="{{item._avatarUrl}}" mode="aspectFill" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%" binderror="onEvalAvatarError" data-index="{{index}}" />
+      </view>
+      <view style="margin-left:12rpx;flex:1">
+        <view class="text-sm text-bold">{{item._nickName||'用户'}}</view>
+      </view>
+      <button wx:if="{{isCreator || myCheckedIn}}" class="btn-small" style="background:var(--primary);color:#fff" bindtap="evaluateMember" data-id="{{item.userId}}">评价</button>
+      <text wx:else class="text-xs text-muted">签到后方可评价</text>
+    </view>
+  </view>
+
+  <view style="margin-top:12rpx">
+    <button class="btn-outline" style="padding:16rpx 0;font-size:24rpx;color:var(--text-muted)" bindtap="doReport">举报该组局</button>
+  </view>
+</view>

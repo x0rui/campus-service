@@ -1,0 +1,22 @@
+<view class="container">
+  <view class="flex-row flex-between mb-10">
+    <text class="text-bold text-lg">社团广场</text>
+  </view>
+
+  <view wx:if="{{list.length===0 && !loading}}" class="empty-state" style="padding:100rpx 0"><text>暂无社团</text></view>
+
+  <view class="card" wx:for="{{list}}" wx:key="id" style="margin-bottom:12rpx" bindtap="goToDetail" data-id="{{item.appId}}">
+    <view class="flex-row" style="gap:16rpx">
+      <view style="width:72rpx;height:72rpx;border-radius:16rpx;background:linear-gradient(135deg,var(--tertiary-light),var(--primary-light));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <text style="font-size:30rpx;font-weight:700;color:var(--tertiary)">{{item.clubName?item.clubName.charAt(0):'社'}}</text>
+      </view>
+      <view style="flex:1;min-width:0">
+        <view class="text-bold text-ellipsis">{{item.clubName}}</view>
+        <view class="text-xs text-body text-line2 mt-5">{{item.description}}</view>
+      </view>
+      <text style="font-size:24rpx;color:var(--text-muted);align-self:center">›</text>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+</view>

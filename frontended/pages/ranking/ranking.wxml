@@ -1,0 +1,31 @@
+<view class="container">
+  <view class="text-bold text-lg mb-15">排行榜</view>
+
+  <view class="tab-bar flex-row mb-15">
+    <view class="tab-item {{tab===0?'tab-active':''}}" bindtap="switchTab" data-tab="0">用户榜</view>
+    <view class="tab-item {{tab===1?'tab-active':''}}" bindtap="switchTab" data-tab="1">组局榜</view>
+    <view class="tab-item {{tab===2?'tab-active':''}}" bindtap="switchTab" data-tab="2">社团榜</view>
+  </view>
+
+  <view wx:if="{{list.length===0 && !loading}}" class="empty-state"><text>暂无数据</text></view>
+
+  <view class="card" wx:for="{{list}}" wx:key="index" style="margin-bottom:12rpx" bindtap="goToDetail" data-index="{{index}}">
+    <view class="flex-row" style="align-items:center;gap:16rpx">
+      <text style="width:60rpx;text-align:center;font-weight:700;font-size:34rpx;color:{{index<3?'var(--primary)':'var(--text-muted)'}}">{{index+1}}</text>
+      <view style="width:64rpx;height:64rpx;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;background:var(--primary-light)">
+        <image wx:if="{{item._avatarUrl}}" src="{{item._avatarUrl}}" mode="aspectFill" style="width:100%;height:100%"/>
+        <text wx:else style="font-size:28rpx;font-weight:600;color:var(--primary)">{{item._displayName?item._displayName.charAt(0):'?'}}</text>
+      </view>
+      <view style="flex:1;min-width:0">
+        <view class="text-bold text-ellipsis">{{item._displayName}}</view>
+        <view class="text-xs text-muted text-ellipsis">{{item._subtitle}}</view>
+      </view>
+      <view style="text-align:right;flex-shrink:0">
+        <text class="text-primary text-lg text-bold">{{item._score}}</text>
+        <text class="text-xs text-muted ml-5">分</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+</view>

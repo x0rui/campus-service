@@ -1,0 +1,39 @@
+<view class="container">
+  <!-- Canvas 预览 -->
+  <view class="p-preview">
+    <canvas type="2d" id="posterCanvas" class="p-canvas"></canvas>
+  </view>
+
+  <!-- 提示词 -->
+  <view class="card p-card">
+    <text class="p-label">描述想要的画面风格</text>
+    <view class="p-input-row">
+      <input class="p-input" style="flex:1" placeholder="例：春日校园，樱花，手绘水彩" value="{{prompt}}" bindinput="onPromptInput" />
+      <view class="p-btn-small p-btn-primary" bindtap="generateBg">
+        <text wx:if="{{!generating}}">生成背景</text>
+        <text wx:else>生成中...</text>
+      </view>
+    </view>
+    <text wx:if="{{bgUrl}}" class="p-hint text-xs text-muted">
+      ✅ 背景已生成，你可以在下方修改标题和地点
+    </text>
+  </view>
+
+  <!-- 活动信息 -->
+  <view class="card p-card">
+    <view class="p-field">
+      <text class="p-label">活动标题</text>
+      <input class="p-input" placeholder="例：周末篮球友谊赛" value="{{title}}" bindinput="onTitleInput" maxlength="20" />
+    </view>
+    <view class="p-field" style="margin-bottom:0">
+      <text class="p-label">地点</text>
+      <input class="p-input" placeholder="例：北区篮球场" value="{{location}}" bindinput="onLocationInput" maxlength="20" />
+    </view>
+  </view>
+
+  <!-- 操作 -->
+  <view class="p-actions">
+    <button class="p-btn p-btn-outline" bindtap="saveToAlbum" loading="{{saving}}">保存到相册</button>
+    <button class="p-btn p-btn-solid" bindtap="saveAndUse" loading="{{saving}}">保存并使用</button>
+  </view>
+</view>

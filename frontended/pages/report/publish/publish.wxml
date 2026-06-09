@@ -1,0 +1,51 @@
+<view class="container">
+  <view class="card report-card">
+    <view class="form-section form-section-first">
+      <view class="form-label">举报对象</view>
+      <view class="report-target-box">
+        <text wx:if="{{targetType==='goods'}}">闲置物品</text>
+        <text wx:elif="{{targetType==='task'}}">跑腿任务</text>
+        <text wx:elif="{{targetType==='team'}}">组局</text>
+        <text wx:elif="{{targetType==='club'}}">社团</text>
+        <text wx:elif="{{targetType==='post'}}">闲聊帖子</text>
+        <text wx:elif="{{targetType==='announcement'}}">公告</text>
+        <text wx:elif="{{targetType==='user'}}">用户</text>
+        <text wx:else>{{targetType}}</text>
+        ：<text class="text-bold">{{targetTitle}}</text>
+      </view>
+    </view>
+
+    <view class="form-section">
+      <view class="form-label">举报原因 <text style="color:var(--danger)">*</text></view>
+      <input class="form-input" placeholder="如：虚假信息、虚假图片、恶意行为..." value="{{reason}}" bindinput="onReasonInput"/>
+    </view>
+
+    <view class="form-section">
+      <view class="form-label">举报描述 <text style="color:var(--danger)">*</text></view>
+      <textarea class="form-textarea" placeholder="请详细描述违规内容..." value="{{description}}" bindinput="onDescInput" auto-height maxlength="1000"/>
+    </view>
+
+    <view class="form-section">
+      <view class="form-label">证据截图（选填，最多6张）</view>
+      <view class="evidence-grid">
+        <view wx:for="{{evidenceImages}}" wx:key="index" class="evidence-item">
+          <image src="{{item}}" mode="aspectFill" class="evidence-img"/>
+          <view class="evidence-remove" bindtap="removeImage" data-index="{{index}}">
+            <text style="color:#fff;font-size:24rpx">×</text>
+          </view>
+        </view>
+        <view wx:if="{{evidenceImages.length < 6}}" class="evidence-add" bindtap="chooseImage">
+          <text style="font-size:40rpx;color:var(--text-muted)">+</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-section-last">
+      <view class="report-warning">
+        <text class="report-warning-text">请确认该信息违规，恶意举报将会导致您的账号功能受限</text>
+      </view>
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="submit" loading="{{submitting}}">提交举报</button>
+</view>

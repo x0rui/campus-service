@@ -1,0 +1,59 @@
+<view class="container" wx:if="{{club}}">
+  <view class="card" style="padding:40rpx 28rpx">
+    <view class="text-xl text-bold" style="text-align:center">{{club.clubName}}</view>
+    <view class="text-sm text-body mt-10">{{club.description}}</view>
+    <view class="flex-row" style="justify-content:center;gap:12rpx;margin-top:16rpx;flex-wrap:wrap">
+      <view class="tag tag-primary">社团管理员: {{adminName||'用户'+club.userId}}</view>
+    </view>
+    <view class="flex-row" style="justify-content:center;gap:12rpx;margin-top:16rpx;flex-wrap:wrap">
+      <view class="btn-small" style="background:var(--primary);color:#fff;width:auto" bindtap="rateClub">评价社团</view>
+      <view wx:if="{{isMember==0 && !joinApplied}}" class="btn-small" style="background:var(--secondary);color:#fff;width:auto" bindtap="joinClub">申请加入</view>
+      <view wx:elif="{{isMember==2 || joinApplied}}" class="tag tag-muted">已申请</view>
+      <view wx:elif="{{isMember==1}}" class="tag tag-success">已加入</view>
+    </view>
+  </view>
+
+  <!-- 待审核申请（仅管理员可见） -->
+  <view class="card" wx:if="{{pendings && pendings.length>0}}">
+    <view class="text-bold text-lg mb-10">待审核 ({{pendings.length}})</view>
+    <view wx:for="{{pendings}}" wx:key="id" style="display:flex;align-items:center;gap:12rpx;padding:12rpx 0;border-bottom:1rpx solid var(--border)">
+      <view style="width:48rpx;height:48rpx;border-radius:50%;background:var(--tertiary-light);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
+        <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill" style="width:100%;height:100%"/>
+        <text wx:else style="font-size:22rpx;font-weight:600;color:var(--tertiary)">{{item.nickName?item.nickName.charAt(0):'?'}}</text>
+      </view>
+      <text class="text-sm" style="flex:1">{{item.nickName||'用户'}}</text>
+      <view class="btn-small" style="background:#48BB78;color:#fff;padding:6rpx 16rpx;font-size:22rpx" bindtap="approveMember" data-id="{{item.id}}" data-approved="true">通过</view>
+      <view class="btn-small" style="background:#FC8181;color:#fff;padding:6rpx 16rpx;font-size:22rpx" bindtap="approveMember" data-id="{{item.id}}" data-approved="false">拒绝</view>
+    </view>
+  </view>
+
+  <!-- 成员列表 -->
+  <view class="card">
+    <view class="text-bold text-lg mb-10">成员 ({{members.length}}人)</view>
+    <view wx:if="{{members.length===0}}" class="text-sm text-muted text-center" style="padding:20rpx 0">暂无成员</view>
+    <view wx:for="{{members}}" wx:key="id" style="display:flex;align-items:center;gap:12rpx;padding:12rpx 0;border-bottom:1rpx solid var(--border)">
+      <view style="width:48rpx;height:48rpx;border-radius:50%;background:var(--tertiary-light);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
+        <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill" style="width:100%;height:100%"/>
+        <text wx:else style="font-size:22rpx;font-weight:600;color:var(--tertiary)">{{item.nickName?item.nickName.charAt(0):'?'}}</text>
+      </view>
+      <view style="flex:1;min-width:0">
+        <view class="flex-row" style="gap:8rpx">
+          <text class="text-sm text-bold">{{item.nickName||'用户'}}</text>
+          <view wx:if="{{item.role===1}}" class="tag tag-primary" style="font-size:16rpx;padding:1rpx 8rpx">管理员</view>
+          <view wx:elif="{{item.role===0}}" class="tag tag-muted" style="font-size:16rpx;padding:1rpx 8rpx">成员</view>
+        </view>
+        <view class="text-xs text-muted text-ellipsis">{{item.college||''}} {{item.gender||''}} {{item.hobbies||''}}</view>
+      </view>
+      <view wx:if="{{isClubAdmin && item.role===0 && item.userId!==club.userId}}" class="btn-small" style="color:#FC8181;border:2rpx solid #FC8181;background:#fff;padding:4rpx 12rpx;font-size:20rpx" bindtap="kickMember" data-id="{{item.id}}">踢出</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="text-bold text-lg mb-10">社团动态</view>
+    <view wx:if="{{posts.length===0}}" class="text-sm text-muted text-center" style="padding:40rpx 0">暂无动态</view>
+    <view wx:for="{{posts}}" wx:key="id" bindtap="goToPost" data-id="{{item.id}}" style="padding:16rpx 0;border-bottom:1rpx solid var(--border)">
+      <view class="text-bold text-ellipsis">{{item.title}}</view>
+      <view class="text-xs text-muted mt-5">{{item.createTime}}</view>
+    </view>
+  </view>
+</view>

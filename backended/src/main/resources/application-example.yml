@@ -1,0 +1,66 @@
+server:
+  address: 0.0.0.0
+  port: 8081
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/campus_service?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${DB_PASSWORD:your-db-password}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  redis:
+    host: localhost
+    port: 6379
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.campus.service.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+# 阿里云OSS配置
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    access-key-id: ${OSS_ACCESS_KEY_ID:your-oss-access-key}
+    access-key-secret: ${OSS_ACCESS_KEY_SECRET:your-oss-secret}
+    bucket-name: your-bucket-name
+
+# DeepSeek AI配置
+deepseek:
+  api-key: ${DEEPSEEK_API_KEY:your-deepseek-api-key}
+  api-url: https://api.deepseek.com/v1/chat/completions
+
+# 通义万相 AI 海报
+dashscope:
+  api-key: ${DASHSCOPE_API_KEY:your-dashscope-key}
+  api-url: https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation
+  model: qwen-image-2.0
+
+# JWT配置
+jwt:
+  secret: ${JWT_SECRET:your-jwt-secret}
+  expiration: 604800000
+
+# 微信小程序配置
+wechat:
+  app-id: your-app-id
+  app-secret: ${WECHAT_APP_SECRET:your-app-secret}
+  dev-mode: true
+
+# 平台配置
+platform:
+  max-task-fee: 100

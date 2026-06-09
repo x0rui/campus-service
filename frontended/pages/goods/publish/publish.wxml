@@ -1,0 +1,41 @@
+<view class="container">
+  <view class="card">
+    <view class="form-label">物品图片（最多6张）</view>
+    <view class="image-upload-row">
+      <view class="image-item" wx:for="{{images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill" />
+        <view class="image-delete" bindtap="removeImage" data-index="{{index}}">×</view>
+      </view>
+      <view class="image-add" wx:if="{{images.length < 6}}" bindtap="chooseImage">
+        <text style="font-size:48rpx;color:#ccc">+</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="form-group">
+      <view class="form-label">标题</view>
+      <input class="form-input" placeholder="请输入物品标题" value="{{title}}" bindinput="onTitleInput" />
+    </view>
+    <view class="form-group">
+      <view class="form-label">分类</view>
+      <picker mode="selector" range="{{categories}}" value="{{categoryIndex}}" bindchange="onCategoryChange">
+        <view class="form-input">{{categories[categoryIndex] || '请选择分类'}}</view>
+      </picker>
+    </view>
+    <view class="form-group">
+      <view class="form-label">价格 (元)</view>
+      <input class="form-input" type="digit" placeholder="请输入价格" value="{{price}}" bindinput="onPriceInput" />
+    </view>
+    <view class="form-group">
+      <view class="form-label flex-row flex-between">
+        <text>描述</text>
+        <text class="text-primary text-sm" bindtap="generateAI">✨ AI生成推荐语</text>
+      </view>
+      <textarea class="form-textarea" placeholder="请详细描述物品状况..." value="{{description}}" bindinput="onDescInput" />
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="submit" loading="{{publishing}}">{{isEdit ? '保存修改' : '立即发布'}}</button>
+  <view style="height:60rpx"></view>
+</view>

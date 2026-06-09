@@ -1,0 +1,137 @@
+<view class="container">
+  <!-- 个人信息卡片 -->
+  <view class="user-profile-card">
+    <view style="display:flex;align-items:center">
+      <view class="profile-avatar-wrap" style="background:rgba(255,255,255,0.2)">
+        <view wx:if="{{!userInfo.avatarUrl}}" class="profile-avatar-text">{{userInfo.nickName ? userInfo.nickName[0] : '?'}}</view>
+        <image wx:else src="{{userInfo.avatarUrl}}" mode="aspectFill" style="width:100%;height:100%"/>
+      </view>
+      <view class="profile-detail">
+        <view class="text-xl text-bold">{{userInfo.nickName || '微信用户'}}</view>
+        <view class="role-tag">ID: {{userInfo.userId}}
+          <text wx:if="{{userInfo.role===0}}"> · 学生</text>
+          <text wx:elif="{{userInfo.role===1}}"> · 社团管理员</text>
+          <text wx:elif="{{userInfo.role===2}}"> · 系统管理员</text>
+           · ⭐ {{avgScore.toFixed(1)}}
+        </view>
+        <view wx:if="{{userInfo.realName}}" class="school-info">{{userInfo.college}} · {{userInfo.realName}}</view>
+        <view wx:if="{{!userInfo.realName}}" class="unverified" catchtap="showVerifyForm">未实名认证 →</view>
+      </view>
+    </view>
+    <view wx:if="{{userInfo.hobbies || userInfo.age}}" class="profile-hobbies-row">
+      <view wx:if="{{userInfo.age || userInfo.gender}}" class="profile-meta">· {{userInfo.age||''}}岁{{userInfo.gender?'·'+userInfo.gender:''}}</view>
+      <view wx:for="{{hobbyList}}" wx:key="*this" class="profile-hobby-tag">{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 账户设置 -->
+  <view class="section-title">账户设置</view>
+  <view class="menu-card">
+    <view class="menu-item" bindtap="showEditProfile">
+      <view class="menu-icon-box menu-icon-blue"><text class="menu-icon">编</text></view>
+      <text class="menu-text">编辑资料</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+  <view class="menu-card">
+    <view class="menu-item" bindtap="showVerifyForm">
+      <view class="menu-icon-box menu-icon-green"><text class="menu-icon">认</text></view>
+      <text class="menu-text">{{userInfo.realName?'已认证':'实名认证'}}</text>
+      <text wx:if="{{!userInfo.realName}}" style="font-size:22rpx;color:var(--accent);margin-right:8rpx">未认证</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 我的内容 -->
+  <view class="section-title">我的内容</view>
+  <view class="menu-card">
+    <view class="menu-item" bindtap="switchTab" data-tab="0">
+      <view class="menu-icon-box menu-icon-pink"><text class="menu-icon">闲</text></view>
+      <text class="menu-text">我的闲置</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+  <view class="menu-card">
+    <view class="menu-item" bindtap="switchTab" data-tab="1">
+      <view class="menu-icon-box menu-icon-orange"><text class="menu-icon">跑</text></view>
+      <text class="menu-text">我的跑腿</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+  <view class="menu-card">
+    <view class="menu-item" bindtap="goToCampusCircle">
+      <view class="menu-icon-box menu-icon-blue"><text class="menu-icon">圈</text></view>
+      <text class="menu-text">校园圈</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+  <view class="menu-card">
+    <view class="menu-item" bindtap="goToMyReports">
+      <view class="menu-icon-box menu-icon-red"><text class="menu-icon">举</text></view>
+      <text class="menu-text">我的举报</text>
+      <view wx:if="{{badgeHandledReports>0}}" class="dot-badge"><text class="dot-badge-text">{{badgeHandledReports}}</text></view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 社交互动 -->
+  <view class="section-title">社交互动</view>
+  <view class="menu-card">
+    <view class="menu-item" bindtap="goToMyTeams">
+      <view class="menu-icon-box menu-icon-blue"><text class="menu-icon">组</text></view>
+      <text class="menu-text">我的组局</text>
+      <view wx:if="{{badgePendingTeamJoins>0}}" class="dot-badge"><text class="dot-badge-text">{{badgePendingTeamJoins}}</text></view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+  <view class="menu-card" wx:if="{{userClub}}">
+    <view class="menu-item" bindtap="goToClubDetail">
+      <view class="menu-icon-box menu-icon-teal"><text class="menu-icon">社</text></view>
+      <text class="menu-text">我的社团</text>
+      <text class="text-xs text-muted mr-5">{{userClub.clubName}}</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+  <view class="menu-card" wx:else>
+    <view class="menu-item" bindtap="goToClubSquare">
+      <view class="menu-icon-box menu-icon-teal"><text class="menu-icon">社</text></view>
+      <text class="menu-text">社团·广场</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+  <view class="menu-card">
+    <view class="menu-item" bindtap="goToEvaluations">
+      <view class="menu-icon-box menu-icon-red"><text class="menu-icon">评</text></view>
+      <text class="menu-text">我的评价</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+  <view class="menu-card" wx:if="{{userInfo.role===2}}">
+    <view class="menu-item" bindtap="goToAdmin">
+      <view class="menu-icon-box menu-icon-gray"><text class="menu-icon">管</text></view>
+      <text class="menu-text">管理后台</text>
+      <view wx:if="{{badgePendingClubChecks>0||badgePendingReports>0}}" class="dot-badge"><text class="dot-badge-text">{{badgePendingClubChecks+badgePendingReports}}</text></view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+  <view class="menu-card" wx:if="{{userInfo.role===0}}">
+    <view class="menu-item" bindtap="goToApplyClub">
+      <view class="menu-icon-box menu-icon-teal"><text class="menu-icon">入</text></view>
+      <text class="menu-text">社团入驻</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+  <view class="menu-card" wx:if="{{userInfo.role===0}}">
+    <view class="menu-item" bindtap="goToMyApply">
+      <view class="menu-icon-box menu-icon-pink"><text class="menu-icon">申</text></view>
+      <text class="menu-text">我的申请</text>
+      <view wx:if="{{badgePendingClubApps>0}}" class="dot-badge"><text class="dot-badge-text">{{badgePendingClubApps}}</text></view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 退出 -->
+  <view style="margin-top:40rpx">
+    <button style="background:var(--card-bg);border:none;border-radius:var(--radius-lg);padding:28rpx;text-align:center;font-size:28rpx;color:var(--danger);width:100%" bindtap="logout">退出登录</button>
+  </view>
+</view>

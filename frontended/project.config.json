@@ -1,0 +1,43 @@
+{
+  "description": "校园多元服务互助平台",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true,
+    "autoAudits": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "enhance": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": true,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.16.0",
+  "appid": "wx1ff40eb6ffa31bdf",
+  "projectname": "campus-service",
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "editorSetting": {}
+}

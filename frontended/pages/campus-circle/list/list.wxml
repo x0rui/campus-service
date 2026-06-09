@@ -1,0 +1,40 @@
+<view class="container">
+  <view class="tab-bar flex-row mb-10">
+    <view class="tab-item {{activeType===0?'tab-active':''}}" bindtap="switchTab" data-type="0">闲聊</view>
+    <view class="tab-item {{activeType===1?'tab-active':''}}" bindtap="switchTab" data-type="1">公告</view>
+  </view>
+
+  <view wx:if="{{list.length===0}}" class="empty-state">
+    <text style="font-size:56rpx;opacity:0.3;margin-bottom:12rpx">·</text>
+    <text>{{activeType===0?'还没有人闲聊，来发第一条吧':'暂无公告'}}</text>
+  </view>
+
+  <view class="card post-card" wx:for="{{list}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}" style="border-left:8rpx solid {{item.type===1?'var(--secondary)':'var(--tertiary)'}}">
+    <view class="flex-row flex-between mb-10">
+      <view class="post-author-row">
+        <view class="avatar-circle" style="background:{{item.type===1?'var(--secondary-light)':'var(--tertiary-light)'}}">
+          <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill" class="avatar-image"/>
+          <text wx:else class="avatar-circle-text" style="color:{{item.type===1?'var(--secondary)':'var(--tertiary)'}}">{{item.nickName ? item.nickName.charAt(0) : '匿'}}</text>
+        </view>
+        <view class="post-author-info">
+          <view class="post-author-name-row">
+            <text class="text-sm text-bold">{{item.nickName || '同学'}}</text>
+            <view wx:if="{{item.role===2}}" class="tag tag-danger post-role-tag">管理员</view>
+            <view wx:elif="{{item.role===1}}" class="tag tag-success post-role-tag">社团</view>
+            <view wx:if="{{item.pinned===1}}" class="tag tag-warning post-role-tag">置顶</view>
+          </view>
+          <text class="text-xs text-muted">{{item.createTime}}</text>
+        </view>
+      </view>
+      <view class="tag {{item.type===1?'tag-success':'tag-muted'}}">{{item.type===1?'公告':'闲聊'}}</view>
+    </view>
+    <view class="text-bold text-ellipsis" style="font-size:28rpx">{{item.title}}</view>
+    <view class="text-xs text-body mt-5 text-line3">{{item.content}}</view>
+    <view class="post-stats-row">
+      <text class="post-stat">赞 {{item.likeCount||0}}</text>
+      <text class="post-stat">评 {{item.commentCount||0}}</text>
+    </view>
+  </view>
+
+  <view class="float-btn" style="bottom:140rpx" bindtap="goToPublish"><text style="font-size:40rpx">+</text></view>
+</view>

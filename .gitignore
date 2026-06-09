@@ -1,0 +1,27 @@
+# === 敏感配置 ===
+backended/src/main/resources/application.yml
+
+# === 编译产物 ===
+backended/target/
+
+# === IDE ===
+.idea/
+*.iml
+.vscode/
+
+# === 文档/资料/个人文件 ===
+123/
+*.md
+*.txt
+*.pdf
+*.docx
+*.csv
+阿里/
+Redis-x64-5.0.14.1/
+.claude/
+
+# === OS ===
+.DS_Store
+Thumbs.db
+*.log
+*/upload/

@@ -1,0 +1,25 @@
+/* 发起组局页 */
+.team-publish-card { padding: 0; overflow: hidden; }
+.publish-section { padding: 28rpx 32rpx; border-bottom: 2rpx solid var(--border); }
+.publish-section:last-child { border-bottom: none; }
+.publish-label { font-size: 24rpx; font-weight: 500; color: var(--text-secondary); margin-bottom: 12rpx; display: block; }
+.publish-row { display: flex; gap: 24rpx; }
+.publish-half { flex: 1; }
+.publish-post {
+  width: 100%; height: 76rpx;
+  background: var(--card-bg); color: var(--text);
+  border: 2rpx solid var(--border);
+  border-radius: var(--radius-md); padding: 0 24rpx;
+  font-size: 28rpx; box-sizing: border-box; display: flex; align-items: center;
+}
+.publish-textarea {
+  background: var(--card-bg); color: var(--text);
+  border: 2rpx solid var(--border);
+  border-radius: var(--radius-md); padding: 20rpx 24rpx;
+  font-size: 28rpx; width: 100%; min-height: 160rpx; line-height: 1.6;
+  box-sizing: border-box;
+}
+.publish-time-row { display: flex; gap: 16rpx; }
+.publish-btn-small { padding: 10rpx 24rpx; font-size: 22rpx; border-radius: var(--radius-sm); }
+.publish-poster { display: flex; align-items: center; gap: 12rpx; margin-top: 16rpx; }
+.publish-poster-img { width: 160rpx; height: 100rpx; border-radius: var(--radius-sm); border: 2rpx solid var(--border); }

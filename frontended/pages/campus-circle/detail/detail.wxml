@@ -1,0 +1,116 @@
+<view class="container" wx:if="{{post}}">
+  <!-- 帖子详情 -->
+  <view class="card">
+    <!-- 发帖人头像+昵称+角色 -->
+    <view class="flex-row flex-between mb-10">
+      <view class="flex-row" style="gap:12rpx">
+        <view style="width:44rpx;height:44rpx;border-radius:50%;overflow:hidden;background:{{post.type===1?'var(--secondary-light)':'var(--tertiary-light)'}};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <image wx:if="{{post.avatarUrl}}" src="{{post.avatarUrl}}" mode="aspectFill" style="width:100%;height:100%"/>
+          <text wx:else style="font-size:24rpx;font-weight:600;color:{{post.type===1?'var(--secondary)':'var(--tertiary)'}}">{{post.nickName ? post.nickName.charAt(0) : '匿'}}</text>
+        </view>
+        <view>
+          <view class="flex-row" style="gap:8rpx">
+            <text class="text-sm text-bold">{{post.nickName || '同学'}}</text>
+            <view wx:if="{{post.role===2}}" class="tag tag-danger" style="padding:2rpx 10rpx;font-size:18rpx">管理员</view>
+            <view wx:elif="{{post.role===1}}" class="tag tag-success" style="padding:2rpx 10rpx;font-size:18rpx">社团</view>
+          </view>
+          <view class="flex-row" style="gap:8rpx;margin-top:4rpx">
+            <view wx:if="{{post.pinned===1}}" class="tag tag-warning" style="padding:2rpx 10rpx;font-size:18rpx">置顶</view>
+            <view wx:if="{{post.clubName}}" class="tag tag-primary" style="padding:2rpx 10rpx;font-size:18rpx">{{post.clubName}}</view>
+            <view class="tag {{post.type===0?'tag-muted':'tag-success'}}" style="padding:2rpx 10rpx;font-size:18rpx">{{post.type===0?'闲聊':'公告'}}</view>
+          </view>
+        </view>
+      </view>
+      <text class="text-xs text-muted">{{post.createTime}}</text>
+    </view>
+    <view class="text-xl text-bold">{{post.title}}</view>
+    <view class="text-body mt-10" style="line-height:1.8;font-size:28rpx">{{post.content}}</view>
+    <view wx:if="{{post.image}}" class="mt-10" style="position:relative;border-radius:var(--radius-md);overflow:hidden">
+      <image src="{{post.image}}" mode="widthFix" style="width:100%;display:block"/>
+      <view style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.5));padding:40rpx 24rpx 24rpx">
+        <text style="color:#fff;font-size:28rpx;font-weight:600;display:block">{{post.title}}</text>
+        <text wx:if="{{post.clubName}}" style="color:rgba(255,255,255,0.8);font-size:22rpx;display:block;margin-top:4rpx">{{post.clubName}}</text>
+      </view>
+    </view>
+    <view class="divider"></view>
+    <view class="flex-row" style="gap:24rpx">
+      <view bindtap="doLike" style="display:flex;align-items:center;gap:6rpx">
+        <text style="font-size:28rpx;color:var(--text-muted)">赞</text><text class="text-sm">{{post.likeCount||0}}</text>
+      </view>
+      <view style="display:flex;align-items:center;gap:6rpx">
+        <text style="font-size:28rpx;color:var(--text-muted)">评</text><text class="text-sm">{{post.commentCount||0}}</text>
+      </view>
+      <view bindtap="doReport" style="margin-left:auto;padding:4rpx 12rpx">
+        <text style="font-size:22rpx;color:var(--text-muted)">举报</text>
+      </view>
+      <button wx:if="{{isOwner}}" class="btn-small" style="color:var(--primary);border:2rpx solid var(--primary);background:#fff" bindtap="doPin">{{post.pinned?'取消置顶':'置顶'}}</button>
+      <button wx:if="{{isOwner}}" class="btn-small" style="color:#FC8181;border:2rpx solid #FC8181;background:#fff;margin-left:8rpx" bindtap="doDelete">删除</button>
+    </view>
+  </view>
+
+  <!-- 评论区（抖音风格：顶层 + 扁平楼层列表） -->
+  <view class="card">
+    <view class="text-bold mb-10" style="font-size:30rpx">评论</view>
+    <view wx:if="{{comments.length===0}}" class="text-sm text-muted text-center" style="padding:40rpx 0">暂无评论</view>
+    <view wx:for="{{comments}}" wx:key="id"
+          style="padding:16rpx 0;border-bottom:1rpx solid var(--border);{{item.pinned===1?'background:#FFFBF0;border-radius:var(--radius-sm);padding:16rpx 12rpx;margin-bottom:4rpx':''}}">
+      <view class="flex-row flex-between">
+        <view class="flex-row" style="gap:10rpx">
+          <view style="width:36rpx;height:36rpx;border-radius:50%;overflow:hidden;background:var(--tertiary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill" style="width:100%;height:100%"/>
+            <text wx:else style="font-size:20rpx;font-weight:600;color:var(--tertiary)">{{item.nickName?item.nickName.charAt(0):'匿'}}</text>
+          </view>
+          <view>
+            <view class="flex-row" style="gap:6rpx">
+              <text class="text-xs text-bold">{{item.nickName||'同学'}}</text>
+              <view wx:if="{{item.role===2}}" class="tag tag-danger" style="padding:1rpx 8rpx;font-size:16rpx">管理员</view>
+              <view wx:elif="{{item.role===1}}" class="tag tag-success" style="padding:1rpx 8rpx;font-size:16rpx">社团</view>
+            </view>
+            <text class="text-xs text-muted">{{item.createTime}}</text>
+          </view>
+        </view>
+        <view wx:if="{{item.pinned===1}}" class="tag tag-warning" style="padding:2rpx 10rpx;font-size:18rpx">置顶</view>
+      </view>
+      <view class="text-sm mt-5" style="margin-left:46rpx">{{item.content}}</view>
+      <view class="flex-row" style="margin-left:46rpx;margin-top:6rpx;gap:16rpx">
+        <view bindtap="doCommentLike" data-id="{{item.id}}"><text class="text-xs" style="color:var(--text-muted)">赞 {{item.likeCount||0}}</text></view>
+        <view bindtap="setReply" data-id="{{item.id}}" data-name="{{item.nickName||'用户'}}"><text class="text-xs" style="color:var(--tertiary)">回复</text></view>
+        <view wx:if="{{isOwner}}" bindtap="pinComment" data-id="{{item.id}}"><text class="text-xs" style="color:var(--tertiary)">{{item.pinned===1?'取消置顶':'置顶'}}</text></view>
+        <view wx:if="{{isOwner || myUserId===item.userId}}" bindtap="deleteComment" data-id="{{item.id}}"><text class="text-xs" style="color:var(--danger)">删除</text></view>
+      </view>
+      <!-- 该楼所有回复（扁平楼层列表，不限深度） -->
+      <view wx:if="{{threadReplies[item.id] && threadReplies[item.id].length>0}}" style="margin-left:46rpx;margin-top:10rpx;background:#F8F9FB;border-radius:var(--radius-sm);padding:8rpx 12rpx">
+        <view wx:for="{{threadReplies[item.id]}}" wx:key="id" style="padding:8rpx 0;border-bottom:1rpx solid rgba(0,0,0,0.04)">
+          <view class="flex-row" style="gap:8rpx">
+            <view style="width:28rpx;height:28rpx;border-radius:50%;overflow:hidden;background:var(--tertiary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <text style="font-size:16rpx;font-weight:600;color:var(--tertiary)">{{item.nickName?item.nickName.charAt(0):'匿'}}</text>
+            </view>
+            <text class="text-xs text-bold">{{item.nickName||'用户'}}</text>
+            <text class="text-xs text-muted">{{item.createTime}}</text>
+          </view>
+          <view style="font-size:24rpx;margin:4rpx 0 4rpx 36rpx">
+            <text wx:if="{{item._replyToName}}" style="font-size:20rpx;color:var(--tertiary)">@{{item._replyToName}} </text>
+            {{item.content}}
+          </view>
+          <view class="flex-row" style="gap:12rpx;margin-left:36rpx">
+            <view bindtap="doCommentLike" data-id="{{item.id}}"><text style="font-size:20rpx;color:var(--text-muted)">赞 {{item.likeCount||0}}</text></view>
+            <view bindtap="setReply" data-id="{{item.id}}" data-name="{{item.nickName||'用户'}}"><text style="font-size:20rpx;color:var(--tertiary)">回复</text></view>
+            <view wx:if="{{isOwner || myUserId===item.userId}}" bindtap="deleteComment" data-id="{{item.id}}"><text style="font-size:20rpx;color:var(--danger)">删除</text></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 发评论栏 -->
+  <view class="card" style="position:sticky;bottom:0;background:#fff;border-top:1rpx solid var(--border)">
+    <view wx:if="{{replyToId>0}}" class="flex-row" style="padding:8rpx 20rpx 0;gap:8rpx">
+      <text class="text-xs text-muted">回复 @{{replyToName}}</text>
+      <text class="text-xs" style="color:var(--danger)" bindtap="cancelReply">取消</text>
+    </view>
+    <view class="flex-row" style="gap:8rpx;padding:16rpx 20rpx;align-items:stretch">
+      <input class="form-input" style="flex:1;min-height:76rpx;font-size:26rpx;height:auto" placeholder="写评论..." value="{{commentText}}" bindinput="onCommentInput"/>
+      <button class="btn-small" style="background:var(--primary);color:#fff;font-size:24rpx;display:flex;align-items:center;padding:0 24rpx;border-radius:var(--radius-md)" bindtap="doComment">发送</button>
+    </view>
+  </view>
+</view>

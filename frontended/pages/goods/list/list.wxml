@@ -1,0 +1,42 @@
+<view class="container">
+  <!-- 搜索栏 → 圆润现代风格 -->
+  <view class="search-bar" style="margin-bottom:16rpx">
+    <text class="search-icon">◯</text>
+    <input class="search-input" placeholder="搜索闲置物品..." value="{{keyword}}" bindinput="onKeywordInput" bindconfirm="onSearch" />
+    <text class="text-sm text-primary" bindtap="onSearch" style="flex-shrink:0;margin-left:12rpx">搜索</text>
+  </view>
+
+  <scroll-view class="category-scroll" scroll-x>
+    <view class="category-tag {{activeCategory === item || (!activeCategory && item === '全部') ? 'category-active' : ''}}"
+          wx:for="{{categories}}" wx:key="*this"
+          bindtap="filterByCategory" data-category="{{item}}">{{item}}</view>
+  </scroll-view>
+
+  <view class="goods-grid">
+    <view class="goods-card" wx:for="{{goodsList}}" wx:key="goodsId"
+          bindtap="goToDetail" data-id="{{item.goodsId}}">
+      <view class="goods-img-placeholder" wx:if="{{!item.firstImage}}">
+        <text style="font-size:56rpx;color:#ccc">📦</text>
+      </view>
+      <image wx:else class="goods-img" src="{{item.firstImage}}" mode="aspectFill" />
+      <view class="goods-info">
+        <view class="text-ellipsis text-sm" style="font-weight:500">{{item.title}}</view>
+        <view class="flex-row flex-between mt-5">
+          <view class="tag tag-primary text-xs">{{item.category}}</view>
+          <view class="text-primary text-bold">¥{{item.price}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{goodsList.length === 0 && !loading}}" class="empty-state">
+    <text class="empty-icon">🛒</text>
+    <text>暂无闲置物品</text>
+  </view>
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+
+  <view class="float-btn" bindtap="goToPublish">
+    <text style="font-size:40rpx">+</text>
+    <text style="font-size:22rpx">发布</text>
+  </view>
+</view>

@@ -1,0 +1,45 @@
+/* 用户页专用样式 */
+.user-profile-card {
+  background: linear-gradient(135deg, #FF7E67 0%, #4ECDC4 100%);
+  border-radius: 24rpx; padding: 28rpx; display: flex;
+  flex-direction: column; color: #fff;
+}
+.profile-avatar-wrap {
+  width: 100rpx; height: 100rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
+}
+.profile-avatar-text {
+  font-size: 40rpx; font-weight: 700;
+}
+.profile-detail { margin-left: 20rpx; flex: 1; }
+.profile-detail .role-tag { opacity: 0.85; margin-top: 4rpx; }
+.profile-detail .school-info { opacity: 0.8; margin-top: 2rpx; font-size: 22rpx; }
+.profile-detail .unverified { opacity: 0.7; margin-top: 2rpx; font-size: 22rpx; }
+.profile-hobbies-row { margin-top: 12rpx; display: flex; gap: 8rpx; flex-wrap: wrap; }
+.profile-hobby-tag {
+  padding: 2rpx 12rpx; background: rgba(255,255,255,0.15);
+  border-radius: 10rpx; font-size: 20rpx;
+}
+.profile-meta {
+  font-size: 22rpx; opacity: 0.8;
+}
+
+/* 菜单项变体配色 */
+.menu-icon-red { background: #FDEAEA; }
+.menu-icon-red .menu-icon { color: #E53E3E; }
+.menu-icon-orange { background: #FFFAF0; }
+.menu-icon-orange .menu-icon { color: #DD6B20; }
+.menu-icon-blue { background: #F0F2FF; }
+.menu-icon-blue .menu-icon { color: var(--tertiary); }
+.menu-icon-green { background: #E6FFFA; }
+.menu-icon-green .menu-icon { color: #38A169; }
+.menu-icon-pink { background: #FFF0EC; }
+.menu-icon-pink .menu-icon { color: var(--primary-dark); }
+.menu-icon-teal { background: #E8FAF8; }
+.menu-icon-teal .menu-icon { color: var(--secondary); }
+.menu-icon-gray { background: #F0F0F3; }
+.menu-icon-gray .menu-icon { color: #666; }
+
+/* 菜单卡片间距 */
+.menu-card + .menu-card { margin-top: 12rpx; }

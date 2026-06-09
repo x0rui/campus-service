@@ -1,0 +1,13 @@
+<view class="container">
+  <view class="card">
+    <view class="form-group">
+      <view class="form-label">社团名称</view>
+      <input class="form-input" placeholder="如：篮球社、摄影社" value="{{clubName}}" bindinput="onNameInput" />
+    </view>
+    <view class="form-group">
+      <view class="form-label">简介</view>
+      <textarea class="form-textarea" placeholder="简单介绍一下你的社团..." value="{{description}}" bindinput="onDescInput" />
+    </view>
+  </view>
+  <button class="btn-primary" bindtap="submit" loading="{{submitting}}">提交申请</button>
+</view>

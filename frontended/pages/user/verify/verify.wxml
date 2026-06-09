@@ -1,0 +1,80 @@
+<view class="container">
+  <view class="card verify-card">
+    <!-- 身份信息 -->
+    <view class="verify-section">
+      <view class="verify-section-title">身份信息</view>
+
+      <view class="verify-row">
+        <view class="verify-field-half">
+          <text class="verify-label">真实姓名</text>
+          <input class="verify-input" placeholder="姓名" value="{{verifyName}}" bindinput="onNameInput" />
+        </view>
+        <view class="verify-field-half">
+          <text class="verify-label">学号</text>
+          <input class="verify-input" placeholder="学号" value="{{verifyStuId}}" bindinput="onStuIdInput" />
+        </view>
+      </view>
+
+      <view class="verify-row">
+        <view class="verify-field-half">
+          <text class="verify-label">手机</text>
+          <input class="verify-input" type="number" placeholder="手机号" maxlength="11" value="{{verifyPhone}}" bindinput="onPhoneInput" />
+        </view>
+        <view class="verify-field-half">
+          <text class="verify-label">年龄</text>
+          <input class="verify-input" type="number" placeholder="年龄" value="{{verifyAge}}" bindinput="onAgeInput" />
+        </view>
+      </view>
+
+      <view class="verify-row">
+        <view class="verify-field-half">
+          <text class="verify-label">学院</text>
+          <input class="verify-input" placeholder="学院" value="{{verifyCollege}}" bindinput="onCollegeInput" />
+        </view>
+        <view class="verify-field-half">
+          <text class="verify-label">专业</text>
+          <input class="verify-input" placeholder="专业" value="{{verifyMajor}}" bindinput="onMajorInput" />
+        </view>
+      </view>
+
+      <view class="verify-row" style="margin-bottom:0">
+        <view class="verify-field-half">
+          <text class="verify-label">班级</text>
+          <input class="verify-input" placeholder="班级" value="{{verifyClassName}}" bindinput="onClassInput" />
+        </view>
+        <view class="verify-field-half">
+          <text class="verify-label">性别</text>
+          <picker mode="selector" range="{{genderOptions}}" bindchange="onGenderChange">
+            <view class="verify-select">
+              <text style="{{verifyGender?'':'color:var(--text-muted)'}}">{{verifyGender||'选择'}}</text>
+              <text style="color:var(--text-muted);font-size:22rpx">▼</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <!-- 校园卡上传 -->
+    <view class="verify-section">
+      <view class="verify-section-title">校园卡照片</view>
+      <view class="verify-card-grid">
+        <view class="verify-card-side">
+          <view class="verify-card-label">正面</view>
+          <view class="verify-card-box" bindtap="chooseCardFront">
+            <image wx:if="{{cardFrontUrl}}" src="{{cardFrontUrl}}" mode="aspectFill" style="width:100%;height:100%"/>
+            <text wx:else class="verify-card-placeholder">点击上传</text>
+          </view>
+        </view>
+        <view class="verify-card-side">
+          <view class="verify-card-label">反面</view>
+          <view class="verify-card-box" bindtap="chooseCardBack">
+            <image wx:if="{{cardBackUrl}}" src="{{cardBackUrl}}" mode="aspectFill" style="width:100%;height:100%"/>
+            <text wx:else class="verify-card-placeholder">点击上传</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <button class="btn-primary" style="background:#27ae60" bindtap="submit" loading="{{submitting}}">提交认证</button>
+</view>

@@ -1,0 +1,39 @@
+.image-upload-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+.image-item {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 8rpx;
+  overflow: hidden;
+  position: relative;
+}
+.image-item image {
+  width: 100%;
+  height: 100%;
+}
+.image-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 48rpx;
+  height: 48rpx;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border-radius: 0 0 0 50%;
+  text-align: center;
+  line-height: 48rpx;
+  font-size: 32rpx;
+}
+.image-add {
+  width: 200rpx;
+  height: 200rpx;
+  border: 2rpx dashed #ddd;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+}

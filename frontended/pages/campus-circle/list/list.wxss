@@ -1,0 +1,8 @@
+/* 校园圈列表页 */
+.post-card { border-radius: var(--radius-md); padding: 24rpx 28rpx; }
+.post-author-row { display: flex; align-items: center; gap: 12rpx; }
+.post-author-info { display: flex; flex-direction: column; }
+.post-author-name-row { display: flex; align-items: center; gap: 8rpx; }
+.post-role-tag { padding: 2rpx 10rpx; font-size: 18rpx; }
+.post-stats-row { display: flex; gap: 24rpx; margin-top: 20rpx; }
+.post-stat { font-size: 22rpx; color: var(--text-muted); }

@@ -1,0 +1,79 @@
+<view class="container">
+  <view class="card team-publish-card">
+    <!-- 标题 -->
+    <view class="publish-section">
+      <text class="publish-label">活动标题</text>
+      <input class="publish-post" placeholder="例：周末一起去打球" value="{{title}}" bindinput="onTitleInput" />
+    </view>
+
+    <!-- 地点 -->
+    <view class="publish-section">
+      <text class="publish-label">活动地点</text>
+      <input class="publish-post" placeholder="例：北区篮球场（可选）" value="{{location}}" bindinput="onLocationInput" />
+    </view>
+
+    <!-- 标签 + 描述 -->
+    <view class="publish-section">
+      <text class="publish-label">标签</text>
+      <picker mode="selector" range="{{tags}}" value="{{tagIndex}}" bindchange="onTagChange">
+        <view class="publish-post">{{tags[tagIndex]}}</view>
+      </picker>
+      <input wx:if="{{tagIndex === tags.length - 1}}" class="publish-post" style="margin-top:12rpx" placeholder="输入自定义标签" value="{{customTag}}" bindinput="onCustomTagInput" />
+    </view>
+
+    <view class="publish-section">
+      <text class="publish-label">描述</text>
+      <textarea class="publish-textarea" placeholder="简单描述一下你的组局..." value="{{description}}" bindinput="onDescInput" />
+      <view class="flex-row" style="gap:12rpx;margin-top:12rpx">
+        <view class="publish-btn-small" style="background:var(--primary-light);color:var(--primary)" bindtap="generateAI">AI 写文案</view>
+        <view class="publish-btn-small" style="background:#FFF0EC;color:#E86A55" bindtap="designPoster">生成海报</view>
+      </view>
+      <view wx:if="{{posterUrl}}" class="publish-poster">
+        <image src="{{posterUrl}}" mode="aspectFill" class="publish-poster-img" />
+        <text class="text-sm text-muted">海报已生成</text>
+      </view>
+    </view>
+
+    <!-- 人数 -->
+    <view class="publish-section">
+      <text class="publish-label">人数设置</text>
+      <view class="publish-row">
+        <view class="publish-half">
+          <text class="form-label">人数上限</text>
+          <input class="publish-post" type="number" placeholder="10" value="{{maxMembers}}" bindinput="onMaxInput" />
+        </view>
+        <view class="publish-half">
+          <text class="form-label">最少成团</text>
+          <input class="publish-post" type="number" placeholder="1" value="{{minMembers}}" bindinput="onMinInput" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 时间 -->
+    <view class="publish-section">
+      <text class="publish-label">时间（可选）</text>
+      <view class="publish-row">
+        <view class="publish-half">
+          <text class="form-label">开始</text>
+          <picker mode="date" start="{{today}}" bindchange="onStartDateChange">
+            <view class="publish-post">{{startDate||'选择日期'}}</view>
+          </picker>
+          <picker wx:if="{{startDate}}" mode="time" bindchange="onStartTimeChange">
+            <view class="publish-post" style="margin-top:12rpx">{{startTime||'选择时间'}}</view>
+          </picker>
+        </view>
+        <view class="publish-half">
+          <text class="form-label">结束</text>
+          <picker mode="date" start="{{startDate || ''}}" bindchange="onEndDateChange">
+            <view class="publish-post">{{endDate||'选择日期'}}</view>
+          </picker>
+          <picker wx:if="{{endDate}}" mode="time" bindchange="onEndTimeChange">
+            <view class="publish-post" style="margin-top:12rpx">{{endTime||'选择时间'}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="submit" loading="{{publishing}}">{{isEdit?'保存修改':'发起组局'}}</button>
+</view>

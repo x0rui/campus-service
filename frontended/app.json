@@ -1,0 +1,60 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/index/index",
+    "pages/goods/list/list",
+    "pages/goods/detail/detail",
+    "pages/goods/publish/publish",
+    "pages/task/square/square",
+    "pages/task/detail/detail",
+    "pages/task/publish/publish",
+    "pages/chat/chat",
+    "pages/message/message",
+    "pages/user/user",
+    "pages/evaluation/evaluation",
+    "pages/evaluation/evaluation-list",
+    "pages/admin/admin",
+    "pages/ranking/ranking",
+    "pages/team/square/square",
+    "pages/team/detail/detail",
+    "pages/team/publish/publish",
+    "pages/team/my/my",
+    "pages/user/my-goods/my-goods",
+    "pages/user/my-tasks/my-tasks",
+    "pages/user/edit/edit",
+    "pages/user/verify/verify",
+    "pages/campus-circle/list/list",
+    "pages/campus-circle/detail/detail",
+    "pages/campus-circle/publish/publish",
+    "pages/user/apply-club/apply-club",
+    "pages/user/my-apply/my-apply",
+    "pages/report/publish/publish",
+    "pages/report/my/my",
+    "pages/poster/create/create",
+    "pages/club/square/square",
+    "pages/club/detail/detail"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FF7E67",
+    "navigationBarTitleText": "校园多服务平台",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#FFF8F0"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#FF7E67",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页", "iconPath": "static/home.png", "selectedIconPath": "static/home-active.png" },
+      { "pagePath": "pages/goods/list/list", "text": "闲置", "iconPath": "static/goods.png", "selectedIconPath": "static/goods-active.png" },
+      { "pagePath": "pages/task/square/square", "text": "跑腿", "iconPath": "static/task.png", "selectedIconPath": "static/task-active.png" },
+      { "pagePath": "pages/message/message", "text": "消息", "iconPath": "static/message.png", "selectedIconPath": "static/message-active.png" },
+      { "pagePath": "pages/user/user", "text": "我的", "iconPath": "static/user.png", "selectedIconPath": "static/user-active.png" }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": { "desc": "用于跑腿任务位置展示" }
+  },
+  "requiredPrivateInfos": ["getLocation", "chooseLocation"]
+}

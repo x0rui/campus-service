@@ -1,0 +1,51 @@
+<view class="container">
+  <!-- 顶部Tab分组 -->
+  <view class="tab-bar flex-row mb-10">
+    <view class="tab-item {{activeSection==='recommend'?'tab-active':''}}" bindtap="switchSection" data-section="recommend">推荐搭子</view>
+    <view class="tab-item {{activeSection==='team'?'tab-active':''}}" bindtap="switchSection" data-section="team">组局</view>
+  </view>
+
+  <!-- 推荐搭子 -->
+  <view wx:if="{{activeSection==='recommend'}}">
+    <view class="search-bar" style="margin-bottom:16rpx">
+      <text class="search-icon">◯</text>
+      <input class="search-input" placeholder="搜索搭子..." value="{{keyword}}" bindinput="onKeywordInput" bindconfirm="onSearch" />
+      <text class="text-sm text-primary" bindtap="onSearch" style="flex-shrink:0;margin-left:12rpx">搜索</text>
+    </view>
+    <view wx:if="{{recommendUsers.length===0}}" class="empty-state"><text>暂无推荐搭子，先设置兴趣爱好吧</text></view>
+    <view class="list-item" wx:for="{{recommendUsers}}" wx:key="userId" style="display:flex;align-items:center;padding:16rpx 20rpx">
+      <view style="width:56rpx;height:56rpx;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:hidden">
+        <text style="font-size:24rpx;color:var(--primary);font-weight:600">{{item.nickName?item.nickName[0]:'?'}}</text>
+        <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%" binderror="onAvatarError" data-index="{{index}}" />
+      </view>
+      <view style="margin-left:14rpx;flex:1;min-width:0">
+        <view class="text-sm text-bold">{{item.nickName||'微信用户'}}</view>
+        <view class="text-xs text-muted">{{item.gender||''}} {{item._grade||''}} {{item.hobbies||''}}</view>
+      </view>
+      <button class="btn-small" style="background:var(--primary);color:#fff" bindtap="contactUser" data-id="{{item.userId}}">聊一聊</button>
+    </view>
+  </view>
+
+  <!-- 组局 -->
+  <view wx:if="{{activeSection==='team'}}">
+    <view class="search-bar" style="margin-bottom:16rpx">
+      <text class="search-icon">◯</text>
+      <input class="search-input" placeholder="搜索组局..." value="{{keyword}}" bindinput="onKeywordInput" bindconfirm="onSearch" />
+      <text class="text-sm text-primary" bindtap="onSearch" style="flex-shrink:0;margin-left:12rpx">搜索</text>
+    </view>
+
+    <scroll-view class="category-scroll" scroll-x>
+      <view class="category-tag {{activeTag===item||(!activeTag&&item==='全部')?'category-active':''}}" wx:for="{{tags}}" wx:key="*this" bindtap="filterByTag" data-tag="{{item}}">{{item}}</view>
+    </scroll-view>
+
+    <view wx:if="{{teamList.length===0&&!loading}}" class="empty-state"><text>暂无组局</text></view>
+    <view class="card" wx:for="{{teamList}}" wx:key="teamId" bindtap="goToDetail" data-id="{{item.teamId}}" style="border-left:8rpx solid var(--teal);border-radius:var(--radius-md)">
+      <view class="flex-row flex-between mb-5"><view class="tag tag-primary">{{item.tag||'其他'}}</view><view class="text-sm text-body">{{item.currentMembers}}/{{item.maxMembers}}人</view></view>
+      <view class="text-bold text-ellipsis">{{item.title}}</view>
+      <view class="text-sm text-body mt-5 text-line2">{{item.description}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+  <view class="float-btn" bindtap="goToPublish"><text style="font-size:40rpx">+</text><text style="font-size:22rpx">组局</text></view>
+</view>

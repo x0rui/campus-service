@@ -1,0 +1,43 @@
+<view class="container">
+  <view class="card">
+    <view class="form-group">
+      <view class="form-label">任务类型</view>
+      <picker mode="selector" range="{{taskTypes}}" value="{{taskTypeIndex}}" bindchange="onTypeChange">
+        <view class="form-input">{{customType || taskTypes[taskTypeIndex]}}</view>
+      </picker>
+      <input wx:if="{{taskTypeIndex === taskTypes.length - 1}}" class="form-input mt-10" placeholder="请输入自定义类型" value="{{customType}}" bindinput="onCustomTypeInput" />
+    </view>
+    <view class="form-group">
+      <view class="form-label">起点</view>
+      <view class="form-input" style="min-height:76rpx;padding:22rpx 26rpx;word-break:break-all;white-space:normal;overflow-wrap:break-word" bindtap="choosePickup">
+        {{pickupLocation || '点击选择起点'}}
+      </view>
+    </view>
+    <view class="form-group">
+      <view class="form-label">终点</view>
+      <view class="form-input" style="min-height:76rpx;padding:22rpx 26rpx;word-break:break-all;white-space:normal;overflow-wrap:break-word" bindtap="chooseDelivery">
+        {{deliveryLocation || '点击选择终点'}}
+      </view>
+    </view>
+    <view class="form-group">
+      <view class="form-label">跑腿费 (元，上限100)</view>
+      <input class="form-input" type="digit" placeholder="请输入跑腿费" value="{{fee}}" bindinput="onFeeInput" />
+    </view>
+    <view class="form-group">
+      <view class="form-label">截止时间</view>
+      <picker mode="date" start="{{today}}" bindchange="onDeadlineChange">
+        <view class="form-input">{{deadline || '点击选择截止时间'}}</view>
+      </picker>
+      <picker mode="time" bindchange="onDeadlineTimeChange" wx:if="{{deadline}}">
+        <view class="form-input mt-5">{{deadlineTime || '选择时间'}}</view>
+      </picker>
+    </view>
+    <view class="form-group">
+      <view class="form-label">备注</view>
+      <textarea class="form-textarea" placeholder="补充说明..." value="{{remark}}" bindinput="onRemarkInput" />
+      <button class="btn-small" style="background:var(--primary-light);color:var(--primary);margin-top:8rpx;width:auto" bindtap="generateAI">AI 生成描述</button>
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="submit">立即发布</button>
+</view>

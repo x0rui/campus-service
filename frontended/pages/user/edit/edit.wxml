@@ -1,0 +1,74 @@
+<view class="container">
+  <view class="card edit-card">
+    <!-- 头像 -->
+    <view class="edit-avatar-section">
+      <view class="edit-avatar-wrap">
+        <image wx:if="{{editAvatar}}" src="{{editAvatar}}" mode="aspectFill" style="width:100%;height:100%"/>
+        <text wx:else class="edit-avatar-letter">{{editNickName?editNickName[0]:'?'}}</text>
+      </view>
+      <view class="edit-avatar-actions">
+        <view class="edit-avatar-btn edit-avatar-btn-primary" bindtap="chooseAvatar">本地上传</view>
+        <view class="edit-avatar-btn edit-avatar-btn-outline" open-type="chooseAvatar" bindchooseavatar="onWechatAvatar">微信头像</view>
+      </view>
+    </view>
+
+    <!-- 表单 -->
+    <view class="edit-body">
+      <view class="edit-field">
+        <text class="edit-label">昵称</text>
+        <input class="edit-input" type="nickname" placeholder="输入昵称" value="{{editNickName}}" bindinput="onNickInput" />
+      </view>
+
+      <view class="edit-row">
+        <view class="edit-field-half">
+          <text class="edit-label">手机</text>
+          <input class="edit-input" type="number" placeholder="手机号" maxlength="11" value="{{editPhone}}" bindinput="onPhoneInput" />
+        </view>
+        <view class="edit-field-half">
+          <text class="edit-label">年龄</text>
+          <input class="edit-input" type="number" placeholder="年龄" value="{{editAge}}" bindinput="onAgeInput" />
+        </view>
+      </view>
+
+      <view class="edit-row">
+        <view class="edit-field-half">
+          <text class="edit-label">学院</text>
+          <input class="edit-input" placeholder="学院" value="{{editCollege}}" bindinput="onCollegeInput" />
+        </view>
+        <view class="edit-field-half">
+          <text class="edit-label">专业</text>
+          <input class="edit-input" placeholder="专业" value="{{editMajor}}" bindinput="onMajorInput" />
+        </view>
+      </view>
+
+      <view class="edit-row">
+        <view class="edit-field-half">
+          <text class="edit-label">班级</text>
+          <input class="edit-input" placeholder="班级" value="{{editClassName}}" bindinput="onClassInput" />
+        </view>
+        <view class="edit-field-half">
+          <text class="edit-label">性别</text>
+          <picker mode="selector" range="{{genderOptions}}" bindchange="onGenderChange">
+            <view class="edit-select">
+              <text style="{{editGender?'':'color:var(--text-muted)'}}">{{editGender||'选择'}}</text>
+              <text style="color:var(--text-muted);font-size:22rpx">▼</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="edit-field">
+        <text class="edit-label">兴趣爱好</text>
+        <view class="edit-hobby-input-row">
+          <input class="edit-input" style="flex:1" placeholder="如：学习、运动" value="{{editCustomHobby}}" bindinput="onHobbyInput" />
+          <view style="padding:0 24rpx;background:var(--primary);color:#fff;border-radius:var(--radius-sm);display:flex;align-items:center;font-size:24rpx" bindtap="addHobby">添加</view>
+        </view>
+        <view wx:if="{{editCustomHobbies.length>0}}" class="edit-hobby-tags">
+          <view wx:for="{{editCustomHobbies}}" wx:key="*this" class="edit-hobby-tag" bindtap="removeHobby" data-index="{{index}}">{{item}} ×</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="save" loading="{{saving}}">保存</button>
+</view>

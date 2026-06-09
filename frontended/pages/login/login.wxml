@@ -1,0 +1,15 @@
+<view class="login-container">
+  <view class="login-header">
+    <view class="app-logo">🎓</view>
+    <view class="app-name">校园多服务平台</view>
+    <view class="app-desc">闲置交易 · 校园跑腿 · 组局社交</view>
+  </view>
+  <view class="login-body">
+    <button class="btn-primary login-btn" bindtap="handleLogin">
+      微信一键登录
+    </button>
+    <view class="text-sm text-gray mt-20" style="text-align:center">
+      登录即表示同意《用户协议》和《隐私政策》
+    </view>
+  </view>
+</view>

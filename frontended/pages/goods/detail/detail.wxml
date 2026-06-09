@@ -1,0 +1,77 @@
+<view wx:if="{{!loading && goods}}">
+  <!-- 图片轮播 -->
+  <swiper class="swiper" indicator-dots="{{images.length > 1}}" indicator-color="#fff" indicator-active-color="#FF7E67">
+    <swiper-item wx:for="{{images}}" wx:key="*this">
+      <image src="{{item}}" mode="aspectFill" bindtap="previewImage" data-index="{{index}}" />
+    </swiper-item>
+  </swiper>
+  <view wx:if="{{images.length === 0}}" class="no-img">暂无图片</view>
+
+  <view class="detail-body">
+    <!-- 标题和价格 -->
+    <view class="card">
+      <view class="text-lg text-bold">{{goods.title}}</view>
+      <view class="flex-row flex-between mt-20">
+        <view class="text-primary" style="font-size:44rpx;font-weight:700">¥{{goods.price}}</view>
+        <view class="tag tag-success">{{goods.status === 0 ? '在售' : goods.status === 1 ? '已售出' : '已下架'}}</view>
+      </view>
+      <view class="flex-row mt-10 text-sm text-body">
+        <text>{{goods.category}}</text>
+        <text style="margin-left:20rpx">{{goods.browseCount}}次浏览</text>
+        <text style="margin-left:20rpx">{{goods.createTime}}</text>
+      </view>
+      <!-- 卖家信息 -->
+      <view class="flex-row flex-between mt-20" wx:if="{{seller}}">
+        <view class="flex-row">
+          <view class="seller-avatar-text" wx:if="{{!seller.avatarUrl || seller._avatarError}}">{{seller.nickName ? seller.nickName[0] : '?'}}</view>
+          <image class="seller-avatar" wx:else src="{{seller.avatarUrl}}" mode="aspectFill" binderror="onSellerAvatarError" />
+          <view style="margin-left:12rpx">
+            <view class="text-sm text-bold">{{seller.nickName || '微信用户'}}</view>
+            <view class="text-xs text-body">卖家 · 用户ID: {{goods.userId}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{canEvaluate}}">
+      <view class="flex-row flex-between" style="align-items:center">
+        <text>交易已完成，去评价卖家？</text>
+        <button class="btn-small" style="background:#FF7E67;color:#fff;padding:4rpx 20rpx" bindtap="evaluateSeller">评价卖家</button>
+      </view>
+    </view>
+
+    <!-- 物品描述 -->
+    <view class="card">
+      <view class="text-bold mb-10">物品描述</view>
+      <view class="text-gray" style="line-height:1.8">{{goods.description || '暂无描述'}}</view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar" wx:if="{{goods.status === 0}}">
+    <button class="btn-outline flex-1" style="margin-right:20rpx"
+            wx:if="{{goods.userId === userInfo.userId}}" bindtap="editGoods">
+      编辑物品
+    </button>
+    <button class="btn-outline flex-1" style="margin-right:20rpx"
+            wx:if="{{goods.userId === userInfo.userId}}" bindtap="offShelf">
+      下架
+    </button>
+    <button class="btn-primary flex-1" style="margin-right:20rpx"
+            wx:if="{{goods.userId === userInfo.userId}}" bindtap="markAsSold">
+      标记已售出
+    </button>
+    <button class="btn-primary flex-1"
+            wx:if="{{goods.userId !== userInfo.userId}}" bindtap="contactSeller">
+      联系卖家
+    </button>
+    <view bindtap="doReport" style="width:80rpx;text-align:center;flex-shrink:0">
+      <text style="font-size:22rpx;color:var(--text-muted)">举报</text>
+    </view>
+  </view>
+  <view class="bottom-bar" wx:elif="{{goods.status !== 0}}" bindtap="doReport">
+    <text style="font-size:22rpx;color:var(--text-muted)">举报</text>
+  </view>
+</view>
+
+<view wx:if="{{loading}}" class="load-more">加载中...</view>

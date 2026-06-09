@@ -1,0 +1,48 @@
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar" style="margin-bottom:16rpx">
+    <text class="search-icon">◯</text>
+    <input class="search-input" placeholder="搜索任务地点..." value="{{keyword}}" bindinput="onKeywordInput" bindconfirm="onSearch" />
+    <text class="text-sm text-primary" bindtap="onSearch" style="flex-shrink:0;margin-left:12rpx">搜索</text>
+  </view>
+
+  <scroll-view class="category-scroll" scroll-x>
+    <view class="category-tag {{activeType === item || (!activeType && item === '全部') ? 'category-active' : ''}}"
+          wx:for="{{taskTypes}}" wx:key="*this"
+          bindtap="filterByType" data-type="{{item}}">{{item}}</view>
+  </scroll-view>
+
+  <view wx:if="{{taskList.length === 0 && !loading}}" class="empty-state">
+    <text>暂无跑腿任务</text>
+  </view>
+
+  <view class="card" wx:for="{{taskList}}" wx:key="taskId"
+        bindtap="goToDetail" data-id="{{item.taskId}}">
+    <view class="flex-row flex-between mb-10">
+      <view class="flex-row">
+        <view class="tag tag-warning" style="margin-right:10rpx">{{item.taskType || '其他'}}</view>
+        <view class="tag {{item.status === 0 ? 'tag-success' : item.status === 1 ? 'tag-warning' : item.status === 2 ? 'tag-primary' : 'tag-muted'}}">
+          {{item.status === 0 ? '待接单' : item.status === 1 ? '进行中' : item.status === 2 ? '已完成' : '已取消'}}
+        </view>
+      </view>
+      <view class="text-primary text-lg text-bold">¥{{item.fee}}</view>
+    </view>
+    <view class="flex-row">
+      <view class="location-dot pickup"></view>
+      <view class="text-ellipsis flex-1">{{item.pickupLocation}}</view>
+    </view>
+    <view class="flex-row mt-10">
+      <view class="location-dot delivery"></view>
+      <view class="text-ellipsis flex-1">{{item.deliveryLocation}}</view>
+    </view>
+    <view class="flex-row flex-between mt-10 text-sm text-gray">
+      <text>截止: {{item.deadline || '不限'}}</text>
+      <text>{{item.createTime}}</text>
+    </view>
+  </view>
+
+  <view class="float-btn" bindtap="goToPublish">
+    <text style="font-size:40rpx">+</text>
+    <text style="font-size:22rpx">发布</text>
+  </view>
+</view>

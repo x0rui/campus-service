@@ -1,0 +1,4 @@
+/* 我的举报 */
+.report-status-card { border-radius: var(--radius-md); padding: 24rpx 28rpx; }
+.report-status-dot { width: 8rpx; border-radius: 4rpx; }
+.report-evidence-thumb { width: 120rpx; height: 120rpx; border-radius: var(--radius-sm); }

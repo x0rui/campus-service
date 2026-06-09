@@ -1,0 +1,31 @@
+<view class="container">
+  <view class="card">
+    <view class="form-group">
+      <view class="form-label">类型</view>
+      <view class="flex-row" style="gap:12rpx">
+        <view style="padding:10rpx 28rpx;border-radius:20rpx;background:{{type===0?'var(--primary)':'#F0F0F3'}};color:{{type===0?'#fff':'#999'}};font-size:26rpx" bindtap="setType" data-type="0">闲聊</view>
+        <view style="padding:10rpx 28rpx;border-radius:20rpx;background:{{type===1?'var(--primary)':'#F0F0F3'}};color:{{type===1?'#fff':'#999'}};font-size:26rpx" bindtap="setType" data-type="1">公告</view>
+      </view>
+    </view>
+    <view class="form-group">
+      <view class="form-label">社团名称</view>
+      <input class="form-input" placeholder="如：篮球社（可选）" value="{{clubName}}" bindinput="onClubInput"/>
+    </view>
+    <view class="form-group">
+      <view class="form-label">标题</view>
+      <input class="form-input" placeholder="标题" value="{{title}}" bindinput="onTitleInput"/>
+    </view>
+    <view class="form-group">
+      <view class="form-label">内容</view>
+      <textarea class="form-textarea" placeholder="写点什么..." value="{{content}}" bindinput="onContentInput" auto-height maxlength="5000"/>
+    </view>
+    <view class="flex-row" style="gap:12rpx">
+      <view class="btn-small" style="background:#FFF0EC;color:#E86A55;width:auto" bindtap="designPoster">生成海报</view>
+    </view>
+    <view wx:if="{{posterUrl}}" class="flex-row mt-5" style="gap:8rpx">
+      <image src="{{posterUrl}}" mode="aspectFill" style="width:120rpx;height:80rpx;border-radius:var(--radius-sm)" />
+      <text class="text-xs text-muted">已生成海报</text>
+    </view>
+  </view>
+  <button class="btn-primary" bindtap="submit" loading="{{publishing}}">发布</button>
+</view>

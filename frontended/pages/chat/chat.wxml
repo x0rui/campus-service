@@ -1,0 +1,51 @@
+<view class="chat-page">
+  <!-- 消息区域 -->
+  <scroll-view class="msg-area" scroll-y scroll-top="{{scrollTop}}" scroll-with-animation="true">
+    <view wx:if="{{messages.length === 0}}" class="msg-empty">
+      <text class="empty-icon">💬</text>
+      <text>开始聊天吧</text>
+    </view>
+    <block wx:for="{{messages}}" wx:key="index">
+      <!-- 对方消息：头像在左 -->
+      <view class="msg-row msg-left" wx:if="{{!item.isMine}}">
+        <view class="msg-avatar" bindtap="showOtherUserInfo">
+          <text class="avatar-letter">{{otherUser.nickName ? otherUser.nickName[0] : '?'}}</text>
+          <image wx:if="{{otherUser.avatarUrl}}" class="avatar-img-overlay" src="{{otherUser.avatarUrl}}" mode="aspectFill" binderror="onOtherAvatarError" />
+        </view>
+        <view class="bubble bubble-left">
+          <image wx:if="{{item.msgType === 1}}" class="bubble-img" src="{{item.content}}" mode="widthFix"
+                 bindtap="previewMsgImage" data-url="{{item.content}}" />
+          <text wx:else>{{item.content}}</text>
+        </view>
+      </view>
+      <!-- 自己消息：头像在右 -->
+      <view class="msg-row msg-right" wx:else>
+        <view class="bubble bubble-right">
+          <image wx:if="{{item.msgType === 1}}" class="bubble-img" src="{{item.content}}" mode="widthFix"
+                 bindtap="previewMsgImage" data-url="{{item.content}}" />
+          <text wx:else>{{item.content}}</text>
+        </view>
+        <view class="msg-avatar">
+          <text wx:if="{{!myAvatarUrl || myAvatarError}}" class="avatar-letter">{{myNickName ? myNickName[0] : '我'}}</text>
+          <image wx:else src="{{myAvatarUrl}}" mode="aspectFill" binderror="onMyAvatarError" />
+        </view>
+      </view>
+    </block>
+    <view id="msg-bottom"></view>
+  </scroll-view>
+
+  <!-- 输入栏 -->
+  <view class="input-bar">
+    <view class="input-row">
+      <view class="input-img-btn" bindtap="sendImage">
+        <text class="img-icon">↑</text>
+      </view>
+      <input class="msg-input" placeholder="输入消息..." value="{{inputText}}"
+             bindinput="onInput" confirm-type="send" bindconfirm="sendMessage"
+             adjust-position="{{true}}" cursor-spacing="16" />
+      <view class="send-btn {{inputText ? 'send-active' : ''}}" bindtap="sendMessage">
+        <text>发送</text>
+      </view>
+    </view>
+  </view>
+</view>

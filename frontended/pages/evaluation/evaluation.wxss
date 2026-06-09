@@ -1,0 +1,14 @@
+.score-area {
+  text-align: center;
+}
+
+.star {
+  font-size: 56rpx;
+  margin: 0 8rpx;
+  display: inline-block;
+  transition: transform 0.15s;
+}
+
+.star:active {
+  transform: scale(1.2);
+}

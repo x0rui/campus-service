@@ -1,0 +1,229 @@
+<view class="admin-page">
+  <!-- 左侧边栏 -->
+  <view class="admin-sidebar">
+    <view class="admin-tab {{currentTab===0?'admin-tab-active':''}}" bindtap="switchTab" data-tab="0">数据统计</view>
+    <view class="admin-tab {{currentTab===1?'admin-tab-active':''}}" bindtap="switchTab" data-tab="1">用户管理</view>
+    <view class="admin-tab {{currentTab===2?'admin-tab-active':''}}" bindtap="switchTab" data-tab="2">物品管理</view>
+    <view class="admin-tab {{currentTab===3?'admin-tab-active':''}}" bindtap="switchTab" data-tab="3">任务管理</view>
+    <view class="admin-tab {{currentTab===4?'admin-tab-active':''}}" bindtap="switchTab" data-tab="4">组局管理</view>
+    <view class="admin-tab {{currentTab===5?'admin-tab-active':''}}" bindtap="switchTab" data-tab="5">校园圈</view>
+    <view class="admin-tab {{currentTab===6?'admin-tab-active':''}}" bindtap="switchTab" data-tab="6">
+      举报管理
+      <view wx:if="{{badgePendingReports>0}}" class="admin-badge"></view>
+    </view>
+    <view class="admin-tab {{currentTab===7?'admin-tab-active':''}}" bindtap="switchTab" data-tab="7">
+      社团审核
+      <view wx:if="{{badgePendingClubChecks>0}}" class="admin-badge"></view>
+    </view>
+    <view class="admin-tab {{currentTab===8?'admin-tab-active':''}}" bindtap="switchTab" data-tab="8">操作日志</view>
+  </view>
+
+  <!-- 右侧内容 -->
+  <view class="admin-content">
+    <view class="text-bold text-lg" style="margin-bottom:24rpx">
+      {{currentTab===0?'数据统计':currentTab===1?'用户管理':currentTab===2?'物品管理':currentTab===3?'任务管理':currentTab===4?'组局管理':currentTab===5?'校园圈':currentTab===6?'举报管理':currentTab===7?'社团审核':'操作日志'}}
+    </view>
+
+    <!-- 数据统计 -->
+    <view wx:if="{{currentTab === 0 && dashboard}}">
+      <view class="stats-grid">
+        <view class="stat-card"><view class="stat-value">{{dashboard.users.totalStudents || 0}}</view><view class="stat-label">注册学生</view></view>
+        <view class="stat-card"><view class="stat-value">{{dashboard.users.todayNewUsers || 0}}</view><view class="stat-label">今日新增</view></view>
+        <view class="stat-card"><view class="stat-value">{{dashboard.goods.onSaleGoods || 0}}</view><view class="stat-label">在售物品</view></view>
+        <view class="stat-card"><view class="stat-value">{{dashboard.goods.todayGoods || 0}}</view><view class="stat-label">今日物品</view></view>
+        <view class="stat-card"><view class="stat-value">{{dashboard.tasks.pendingTasks || 0}}</view><view class="stat-label">待接跑腿</view></view>
+        <view class="stat-card"><view class="stat-value">{{dashboard.tasks.todayTasks || 0}}</view><view class="stat-label">今日跑腿</view></view>
+      </view>
+    </view>
+
+    <!-- 用户管理 -->
+    <view wx:if="{{currentTab === 1}}">
+      <view style="display:flex;gap:12rpx;margin-bottom:16rpx">
+        <input class="form-input" style="flex:1;min-height:64rpx" placeholder="搜索用户ID..." value="{{userKeyword}}" bindinput="onUserKeyword" />
+        <view class="btn-small" style="background:var(--primary);color:#fff;padding:10rpx 20rpx;border-radius:var(--radius-sm);display:flex;align-items:center;white-space:nowrap" bindtap="searchUsers">搜索</view>
+      </view>
+      <view wx:if="{{userList.length === 0}}" class="empty-state" style="padding:100rpx 0"><text>暂无用户</text></view>
+      <view class="card" wx:for="{{userList}}" wx:key="userId" bindtap="showUserDetail" data-index="{{index}}">
+        <view class="flex-row flex-between">
+          <view class="flex-1">
+            <view class="text-bold">ID:{{item.userId}} {{item.nickName}}</view>
+            <view class="text-sm text-gray">{{item.realName || '未认证'}} · {{item.college||''}} {{item.major||''}}</view>
+            <view class="text-sm text-gray">学号: {{item.studentId||'-'}} · 手机: {{item.phone||'-'}}</view>
+          </view>
+          <view>
+            <view class="tag mb-10 {{item.role===2?'tag-danger':item.role===1?'tag-warning':'tag-primary'}}">{{item.role===0?'学生':item.role===1?'社团管理员':'系统管理员'}}</view>
+            <view class="tag {{item.status===0?'tag-success':'tag-danger'}}">{{item.status===0?'正常':'已禁用'}}</view>
+          </view>
+        </view>
+        <view class="flex-row mt-15" wx:if="{{item.role!==2}}">
+          <view class="btn-small" style="margin-right:12rpx;flex:1;text-align:center;border:2rpx solid var(--primary);color:var(--primary);border-radius:var(--radius-sm);padding:10rpx 0;font-size:22rpx" bindtap="setRole" data-id="{{item.userId}}" data-role="{{item.role===1?0:1}}">{{item.role===1?'取消管理员':'设为社团管理员'}}</view>
+          <view class="btn-small" style="flex:1;text-align:center;background:#e74c3c;color:#fff;border-radius:var(--radius-sm);padding:10rpx 0;font-size:22rpx" bindtap="toggleUserStatus" data-id="{{item.userId}}" data-status="{{item.status===0?1:0}}">{{item.status===0?'禁用':'启用'}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 物品管理 -->
+    <view wx:if="{{currentTab === 2}}">
+      <view style="display:flex;gap:12rpx;margin-bottom:16rpx">
+        <input class="form-input" style="flex:1;min-height:64rpx" placeholder="搜索物品名称..." value="{{goodsKeyword}}" bindinput="onGoodsKeyword" />
+        <view class="btn-small" style="background:var(--primary);color:#fff;padding:10rpx 20rpx;border-radius:var(--radius-sm);display:flex;align-items:center;white-space:nowrap" bindtap="searchGoods">搜索</view>
+      </view>
+      <view wx:if="{{goodsList.length === 0}}" class="empty-state" style="padding:100rpx 0"><text>暂无物品</text></view>
+      <view class="card" wx:for="{{goodsList}}" wx:key="goodsId" style="margin-bottom:12rpx" bindtap="showGoodsDetail" data-index="{{index}}">
+        <view class="flex-row flex-between">
+          <view class="flex-1">
+            <view class="text-bold">{{item.title}}</view>
+            <view class="text-sm text-gray mt-5">¥{{item.price}} · {{item.category}} · 发布者:{{item.userId}}</view>
+            <view class="tag mt-5 {{item.status===0?'tag-success':item.status===1?'tag-primary':'tag-muted'}}">{{item.status===0?'在售':item.status===1?'已售出':'已下架'}}</view>
+          </view>
+          <view class="btn-small" style="background:#e74c3c;color:#fff;border-radius:var(--radius-sm);padding:8rpx 16rpx;font-size:22rpx" wx:if="{{item.status===0}}" bindtap="offlineGoods" data-id="{{item.goodsId}}">下架</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 任务管理 -->
+    <view wx:if="{{currentTab === 3}}">
+      <view style="display:flex;gap:12rpx;margin-bottom:16rpx">
+        <input class="form-input" style="flex:1;min-height:64rpx" placeholder="搜索任务地点..." value="{{taskKeyword}}" bindinput="onTaskKeyword" />
+        <view class="btn-small" style="background:var(--primary);color:#fff;padding:10rpx 20rpx;border-radius:var(--radius-sm);display:flex;align-items:center;white-space:nowrap" bindtap="searchTasks">搜索</view>
+      </view>
+      <view wx:if="{{taskList.length === 0}}" class="empty-state" style="padding:100rpx 0"><text>暂无任务</text></view>
+      <view class="card" wx:for="{{taskList}}" wx:key="taskId" style="margin-bottom:12rpx" bindtap="showTaskDetail" data-index="{{index}}">
+        <view class="flex-row flex-between">
+          <view class="flex-1">
+            <view class="text-bold">{{item.pickupLocation}} → {{item.deliveryLocation}}</view>
+            <view class="text-sm text-gray mt-5">¥{{item.fee}} · {{item.taskType}} · 发布者:{{item.publisherId}}</view>
+            <view class="tag mt-5 {{item.status===0?'tag-success':item.status===1?'tag-warning':item.status===2?'tag-primary':'tag-muted'}}">{{item.status===0?'待接单':item.status===1?'已接单':item.status===2?'已完成':'已取消'}}</view>
+          </view>
+          <view class="btn-small" style="background:#e74c3c;color:#fff;border-radius:var(--radius-sm);padding:8rpx 16rpx;font-size:22rpx" wx:if="{{item.status===0||item.status===1}}" bindtap="offlineTask" data-id="{{item.taskId}}">取消</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 组局管理 -->
+    <view wx:if="{{currentTab === 4}}">
+      <view style="display:flex;gap:12rpx;margin-bottom:16rpx">
+        <input class="form-input" style="flex:1;min-height:64rpx" placeholder="搜索组局标题..." value="{{teamKeyword}}" bindinput="onTeamKeyword" />
+        <view class="btn-small" style="background:var(--primary);color:#fff;padding:10rpx 20rpx;border-radius:var(--radius-sm);display:flex;align-items:center;white-space:nowrap" bindtap="searchTeams">搜索</view>
+      </view>
+      <view wx:if="{{teamList.length === 0}}" class="empty-state" style="padding:100rpx 0"><text>暂无组局</text></view>
+      <view class="card" wx:for="{{teamList}}" wx:key="teamId" style="margin-bottom:12rpx">
+        <view class="flex-row flex-between">
+          <view class="flex-1">
+            <view class="text-bold">{{item.title}}</view>
+            <view class="text-sm text-gray mt-5">{{item.tag}} · {{item.currentMembers}}/{{item.maxMembers}}人 · 发起人:{{item.userId}}</view>
+            <view class="tag mt-5 {{item.status===0?'tag-success':item.status===1?'tag-warning':item.status===2?'tag-primary':'tag-muted'}}">{{item.status===0?'招募中':item.status===1?'已满':item.status===2?'已结束':'已取消'}}</view>
+          </view>
+          <view class="btn-small" style="background:#e74c3c;color:#fff;border-radius:var(--radius-sm);padding:8rpx 16rpx;font-size:22rpx" wx:if="{{item.status===0}}" bindtap="offlineTeam" data-id="{{item.teamId}}">结束</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 校园圈 -->
+    <view wx:if="{{currentTab === 5}}">
+      <view style="display:flex;gap:12rpx;margin-bottom:16rpx">
+        <input class="form-input" style="flex:1;min-height:64rpx" placeholder="搜索帖子标题..." value="{{postKeyword}}" bindinput="onPostKeyword" />
+        <view class="btn-small" style="background:var(--primary);color:#fff;padding:10rpx 20rpx;border-radius:var(--radius-sm);display:flex;align-items:center;white-space:nowrap" bindtap="searchPosts">搜索</view>
+      </view>
+      <view class="flex-row mb-10" style="gap:8rpx">
+        <view class="category-tag {{postTab===0?'category-active':''}}" bindtap="switchPostTab" data-tab="0">全部</view>
+        <view class="category-tag {{postTab===1?'category-active':''}}" bindtap="switchPostTab" data-tab="1">闲聊</view>
+        <view class="category-tag {{postTab===2?'category-active':''}}" bindtap="switchPostTab" data-tab="2">公告</view>
+      </view>
+      <view wx:if="{{postList.length === 0}}" class="empty-state" style="padding:100rpx 0"><text>暂无帖子</text></view>
+      <view class="card" wx:for="{{postList}}" wx:key="id" style="margin-bottom:12rpx">
+        <view class="flex-row flex-between">
+          <view class="flex-1">
+            <view class="text-bold text-ellipsis">{{item.title}}</view>
+            <view class="text-sm text-gray mt-5 text-line2">{{item.content}}</view>
+            <view class="flex-row mt-5" style="gap:12rpx">
+              <view class="tag {{item.type===0?'tag-muted':'tag-success'}}" style="font-size:20rpx">{{item.type===0?'闲聊':'公告'}}</view>
+              <view class="text-xs text-muted">赞{{item.likeCount||0}} 评{{item.commentCount||0}} {{item.createTime}}</view>
+            </view>
+          </view>
+          <view class="btn-small" style="background:#e74c3c;color:#fff;border-radius:var(--radius-sm);padding:8rpx 16rpx;font-size:22rpx" bindtap="deletePost" data-id="{{item.id}}" wx:if="{{item.status===0}}">删除</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 举报管理 -->
+    <view wx:if="{{currentTab === 6}}">
+      <view class="flex-row mb-10" style="gap:8rpx">
+        <input class="form-input" style="flex:1;min-height:64rpx" placeholder="搜索举报关键词..." value="{{reportKeyword}}" bindinput="onReportKeyword" />
+        <view class="btn-small" style="background:var(--primary);color:#fff;padding:10rpx 20rpx;border-radius:var(--radius-sm);display:flex;align-items:center;white-space:nowrap" bindtap="searchReports">搜索</view>
+      </view>
+      <view class="flex-row mb-10" style="gap:8rpx;flex-wrap:wrap">
+        <view class="category-tag {{reportStatus===0?'category-active':''}}" bindtap="switchReportStatus" data-status="0">待处理</view>
+        <view class="category-tag {{reportStatus===1?'category-active':''}}" bindtap="switchReportStatus" data-status="1">已确认</view>
+        <view class="category-tag {{reportStatus===2?'category-active':''}}" bindtap="switchReportStatus" data-status="2">已驳回</view>
+      </view>
+      <view wx:if="{{reportList.length === 0}}" class="empty-state" style="padding:100rpx 0"><text>暂无举报</text></view>
+      <view class="card" wx:for="{{reportList}}" wx:key="reportId" style="margin-bottom:12rpx;border-left:8rpx solid {{item.status===0?'var(--accent)':item.status===1?'var(--danger)':'var(--text-muted)'}}">
+        <view class="flex-row flex-between mb-5">
+          <view class="flex-row" style="gap:8rpx">
+            <view class="tag {{item.status===0?'tag-warning':item.status===1?'tag-danger':'tag-muted'}}">{{item.status===0?'待处理':item.status===1?'已确认违规':'已驳回'}}</view>
+            <view class="tag tag-primary">{{item.targetType==='goods'?'闲置':item.targetType==='task'?'跑腿':item.targetType==='team'?'组局':item.targetType==='club'?'社团':item.targetType==='post'?'闲聊':item.targetType==='user'?'用户':'公告'}}</view>
+          </view>
+          <text class="text-xs text-muted">{{item.createTime}}</text>
+        </view>
+        <view class="text-bold text-ellipsis" style="font-size:26rpx">{{item.targetTitle}}</view>
+        <view class="text-xs text-body mt-5 text-line2">{{item.description}}</view>
+        <view class="flex-row mt-5" style="gap:12rpx">
+          <text class="text-xs text-muted">举报人:{{item.reporterName||'用户'+item.reporterId}}</text>
+          <text class="text-xs text-muted">原因:{{item.reason}}</text>
+        </view>
+        <view wx:if="{{item.status===0}}" class="flex-row mt-10" style="gap:12rpx">
+          <input class="form-input" style="flex:1;min-height:56rpx;font-size:24rpx;padding:10rpx 16rpx" placeholder="处理备注..." value="{{item._note||''}}" bindinput="onReportNote" data-id="{{item.reportId}}"/>
+          <view class="btn-small" style="background:#48BB78;color:#fff;border-radius:var(--radius-sm);padding:10rpx 16rpx;font-size:22rpx;white-space:nowrap" bindtap="handleReport" data-id="{{item.reportId}}" data-status="1">确认</view>
+          <view class="btn-small" style="background:#FC8181;color:#fff;border-radius:var(--radius-sm);padding:10rpx 16rpx;font-size:22rpx;white-space:nowrap" bindtap="handleReport" data-id="{{item.reportId}}" data-status="2">驳回</view>
+        </view>
+        <view wx:if="{{item.status!==0 && item.handleNote}}" class="mt-5"><text class="text-xs text-muted">备注: {{item.handleNote}}</text></view>
+      </view>
+    </view>
+
+    <!-- 社团审核 -->
+    <view wx:if="{{currentTab === 7}}">
+      <view wx:if="{{clubApps.length===0}}" class="empty-state" style="padding:100rpx 0"><text>暂无待审核申请</text></view>
+      <view class="card" wx:for="{{clubApps}}" wx:key="id" style="margin-bottom:12rpx">
+        <view class="flex-row flex-between">
+          <view class="flex-1">
+            <view class="text-bold">{{item.clubName}}</view>
+            <view class="text-sm text-body mt-5">{{item.description}}</view>
+            <view class="text-xs text-muted mt-5">申请人ID: {{item.userId}} · {{item.createTime}}</view>
+          </view>
+        </view>
+        <view class="flex-row mt-10" style="gap:12rpx">
+          <view class="btn-small" style="background:#48BB78;color:#fff;border-radius:var(--radius-sm);padding:10rpx 0;text-align:center;flex:1;font-size:22rpx" bindtap="approveClub" data-id="{{item.appId}}" data-approved="true">通过</view>
+          <view class="btn-small" style="background:#FC8181;color:#fff;border-radius:var(--radius-sm);padding:10rpx 0;text-align:center;flex:1;font-size:22rpx" bindtap="approveClub" data-id="{{item.appId}}" data-approved="false">拒绝</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作日志 -->
+    <view wx:if="{{currentTab === 8}}">
+      <view class="flex-row mb-10" style="gap:8rpx;flex-wrap:wrap">
+        <view class="category-tag {{logType==='all'?'category-active':''}}" bindtap="switchLogType" data-type="all">全部</view>
+        <view class="category-tag {{logType==='goods'?'category-active':''}}" bindtap="switchLogType" data-type="goods">闲置</view>
+        <view class="category-tag {{logType==='task'?'category-active':''}}" bindtap="switchLogType" data-type="task">跑腿</view>
+        <view class="category-tag {{logType==='team'?'category-active':''}}" bindtap="switchLogType" data-type="team">组局</view>
+        <view class="category-tag {{logType==='post'?'category-active':''}}" bindtap="switchLogType" data-type="post">帖子</view>
+        <view class="category-tag {{logType==='club'?'category-active':''}}" bindtap="switchLogType" data-type="club">社团</view>
+        <view class="category-tag {{logType==='report'?'category-active':''}}" bindtap="switchLogType" data-type="report">举报</view>
+      </view>
+      <view class="flex-row mb-10" style="gap:12rpx">
+        <input class="form-input" style="flex:1;min-height:64rpx" placeholder="搜索操作名称..." value="{{logKeyword}}" bindinput="onLogKeyword" />
+        <view class="btn-small" style="background:var(--primary);color:#fff;padding:10rpx 20rpx;border-radius:var(--radius-sm);display:flex;align-items:center;white-space:nowrap" bindtap="searchLogs">搜索</view>
+      </view>
+      <view wx:if="{{logList.length === 0}}" class="empty-state" style="padding:100rpx 0"><text>暂无日志</text></view>
+      <view class="list-item" wx:for="{{logList}}" wx:key="id" style="font-size:24rpx;line-height:1.6">
+        <view class="flex-row flex-between">
+          <text class="text-bold">{{item.operation}}</text>
+          <text class="text-xs text-muted">{{item.createTime}}</text>
+        </view>
+        <view class="text-xs text-muted mt-5">{{item.method}}</view>
+      </view>
+    </view>
+
+    <view wx:if="{{loading}}" class="load-more">加载中...</view>
+  </view>
+</view>

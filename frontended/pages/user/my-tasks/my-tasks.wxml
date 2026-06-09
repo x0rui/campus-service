@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="tab-bar flex-row mb-10">
+    <view class="tab-item {{taskSubTab===0?'tab-active':''}}" bindtap="switchSubTab" data-tab="0">待接({{taskCount.pending||0}})</view>
+    <view class="tab-item {{taskSubTab===1?'tab-active':''}}" bindtap="switchSubTab" data-tab="1">进行({{taskCount.ongoing||0}})</view>
+    <view class="tab-item {{taskSubTab===2?'tab-active':''}}" bindtap="switchSubTab" data-tab="2">完成({{taskCount.done||0}})</view>
+    <view class="tab-item {{taskSubTab===3?'tab-active':''}}" bindtap="switchSubTab" data-tab="3">取消({{taskCount.cancelled||0}})</view>
+  </view>
+  <view wx:if="{{list.length===0}}" class="empty-state"><text>暂无</text></view>
+  <view class="card" wx:for="{{list}}" wx:key="taskId" bindtap="goToDetail" data-id="{{item.taskId}}">
+    <view class="flex-row flex-between">
+      <text class="text-ellipsis flex-1">{{item.pickupLocation}} → {{item.deliveryLocation}}</text>
+      <view class="flex-row" style="gap:6rpx">
+        <view wx:if="{{item._role}}" class="tag {{item._role==='发布'?'tag-primary':'tag-success'}}" style="padding:2rpx 10rpx;font-size:18rpx">{{item._role}}</view>
+        <view class="tag {{item.status===0?'tag-success':item.status===1?'tag-warning':item.status===2?'tag-primary':'tag-muted'}}">{{item.status===0?'待接单':item.status===1?'进行中':item.status===2?'已完成':'已取消'}}</view>
+      </view>
+    </view>
+    <view class="text-primary mt-10">¥{{item.fee}}</view>
+  </view>
+</view>

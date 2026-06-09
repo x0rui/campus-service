@@ -1,0 +1,16 @@
+/* 首页专用样式 */
+.brand-header-light {
+  padding-bottom: 48rpx;
+  background: linear-gradient(135deg, #FFB5A0, #FFDCC8);
+  color: #5D4037;
+}
+.brand-header-light .greeting { opacity: 0.7; font-size: 26rpx; }
+.brand-header-light .greeting-hint { font-size: 26rpx; opacity: 0.65; line-height: 1.6; margin-top: 20rpx; }
+.brand-avatar { width: 72rpx; height: 72rpx; border-radius: 50%; background: rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+.brand-avatar-text { font-size: 30rpx; color: #5D4037; font-weight: 600; }
+/* 装饰圆环 */
+.brand-header-light::after {
+  content: ''; position: absolute; top: -40rpx; right: -20rpx;
+  width: 160rpx; height: 160rpx; background: rgba(255,255,255,0.12);
+  border-radius: 50%;
+}

@@ -1,0 +1,28 @@
+<view class="container">
+  <view wx:if="{{list.length===0}}" class="empty-state">
+    <text style="font-size:56rpx;opacity:0.3;margin-bottom:12rpx">·</text>
+    <text>暂无举报记录</text>
+  </view>
+  <view class="card" wx:for="{{list}}" wx:key="reportId"
+        style="border-radius:var(--radius-md);padding:24rpx 28rpx;border-left:8rpx solid {{item.status===0?'var(--accent)':item.status===1?'var(--danger)':'var(--text-muted)'}}">
+    <view class="flex-row flex-between mb-5">
+      <view class="flex-row" style="gap:8rpx">
+        <view class="tag {{item.status===0?'tag-warning':item.status===1?'tag-danger':'tag-muted'}}">
+          {{item.status===0?'待处理':item.status===1?'已确认违规':'已驳回'}}
+        </view>
+        <view class="tag tag-primary">{{item.targetType==='goods'?'闲置':item.targetType==='task'?'跑腿':item.targetType==='team'?'组局':item.targetType==='club'?'社团':item.targetType==='post'?'闲聊':item.targetType==='user'?'用户':'公告'}}</view>
+      </view>
+      <text class="text-xs text-muted">{{item.createTime}}</text>
+    </view>
+    <view class="text-sm text-bold text-ellipsis">{{item.targetTitle}}</view>
+    <view class="text-xs text-body mt-5 text-line2">{{item.description}}</view>
+    <view class="flex-row mt-5" style="gap:12rpx">
+      <text class="text-xs text-muted">举报原因：{{item.reason}}</text>
+      <text wx:if="{{item.status!==0 && item.handleNote}}" class="text-xs text-muted flex-1 text-right">处理备注：{{item.handleNote}}</text>
+    </view>
+    <view wx:if="{{item.evidenceList && item.evidenceList.length>0}}" class="flex-row flex-wrap mt-5" style="gap:8rpx">
+      <image wx:for="{{item.evidenceList}}" wx:key="index" src="{{item}}" mode="aspectFill"
+             style="width:120rpx;height:120rpx;border-radius:var(--radius-sm)" bindtap="preview" data-url="{{item}}"/>
+    </view>
+  </view>
+</view>

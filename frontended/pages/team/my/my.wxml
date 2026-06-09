@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="tab-bar flex-row mb-20">
+    <view class="tab-item {{tab === 0 ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="0">我创建的</view>
+    <view class="tab-item {{tab === 1 ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="1">我加入的</view>
+  </view>
+
+  <view wx:if="{{teams.length === 0}}" class="empty-state">
+    <text class="empty-icon">🤝</text>
+    <text>{{tab === 0 ? '还没有创建组局' : '还没有加入组局'}}</text>
+  </view>
+
+  <view class="card" wx:for="{{teams}}" wx:key="teamId"
+        bindtap="goToDetail" data-id="{{item.teamId}}">
+    <view class="flex-row flex-between">
+      <view class="flex-row" style="gap:10rpx">
+        <view class="tag tag-primary">{{item.tag}}</view>
+        <view class="tag {{item.status === 0 ? 'tag-success' : item.status === 1 ? 'tag-warning' : 'tag-muted'}}">
+          {{item.status === 0 ? '招募中' : item.status === 1 ? '已满' : item.status === 2 ? '已结束' : '已取消'}}
+        </view>
+      </view>
+      <text class="text-sm text-body">{{item.currentMembers}}/{{item.maxMembers}}人</text>
+    </view>
+    <view class="text-bold text-ellipsis mt-10">{{item.title}}
+      <text wx:if="{{item._pendingCount>0}}" style="font-size:20rpx;color:var(--danger);margin-left:8rpx">({{item._pendingCount}}条申请)</text></view>
+    <view class="text-sm text-body mt-5">{{item.createTime}}</view>
+  </view>
+</view>

@@ -1,0 +1,34 @@
+<view class="msg-page">
+  <view wx:if="{{conversations.length === 0 && !loading}}" class="msg-empty">
+    <view class="empty-icon">💬</view>
+    <text class="empty-text">暂无消息</text>
+    <text class="empty-hint">去闲置或跑腿联系卖家吧</text>
+  </view>
+
+  <view wx:for="{{conversations}}" wx:key="otherUserId" class="msg-row" bindtap="openChat" data-id="{{item.otherUserId}}">
+    <view class="msg-avatar-wrap">
+      <view class="msg-avatar">
+        <text class="avatar-letter">{{item.otherNickName ? item.otherNickName[0] : '?'}}</text>
+      </view>
+      <image wx:if="{{item.otherAvatarUrl}}" class="msg-avatar" src="{{item.otherAvatarUrl}}" mode="aspectFill" binderror="onAvatarError" data-index="{{index}}" style="position:absolute;top:0;left:0" />
+      <view class="online-dot" wx:if="{{item.isOnline}}"></view>
+    </view>
+
+    <view class="msg-body">
+      <view class="msg-top">
+        <text class="msg-name">{{item.otherNickName || '微信用户'}}</text>
+        <text class="msg-time">{{item._time}}</text>
+      </view>
+      <view class="msg-bottom">
+        <text class="msg-preview">{{item._preview}}</text>
+        <view class="unread-badge" wx:if="{{item.unreadCount > 0}}">
+          <text>{{item.unreadCount > 99 ? '99+' : item.unreadCount}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+
+  <view class="safe-bottom"></view>
+</view>

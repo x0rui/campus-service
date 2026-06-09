@@ -1,0 +1,87 @@
+<view wx:if="{{!loading && task}}">
+  <view class="detail-body">
+    <!-- 任务状态 -->
+    <view class="card">
+      <view class="flex-row flex-between">
+        <view class="text-lg text-bold">{{task.taskType || '其他'}} - {{task.status === 0 ? '待接单' : task.status === 1 ? '已接单' : task.status === 2 ? '已完成' : '已取消'}}</view>
+        <view class="text-primary text-lg text-bold">¥{{task.fee}}</view>
+      </view>
+    </view>
+
+    <!-- 地址信息 -->
+    <view class="card">
+      <view class="flex-row mb-10">
+        <view class="location-dot pickup"></view>
+        <view class="flex-1">
+          <view class="text-sm text-gray">起点</view>
+          <view class="text-bold">{{task.pickupLocation}}</view>
+        </view>
+      </view>
+      <view class="flex-row">
+        <view class="location-dot delivery"></view>
+        <view class="flex-1">
+          <view class="text-sm text-gray">终点</view>
+          <view class="text-bold">{{task.deliveryLocation}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="card" wx:if="{{task.remark}}">
+      <view class="text-bold mb-10">备注</view>
+      <view class="text-gray">{{task.remark}}</view>
+    </view>
+
+    <!-- 发布者信息 -->
+    <view class="card" wx:if="{{publisher}}">
+      <view class="text-bold mb-10">发布者</view>
+      <view class="flex-row">
+        <view class="seller-avatar-text" wx:if="{{!publisher.avatarUrl}}">{{publisher.nickName ? publisher.nickName[0] : '?'}}</view>
+        <image wx:else class="seller-avatar" src="{{publisher.avatarUrl}}" />
+        <text style="margin-left:12rpx">{{publisher.nickName}}</text>
+      </view>
+    </view>
+
+    <!-- 时间信息 -->
+    <view class="card">
+      <view class="text-sm text-gray">发布时间: {{task.createTime}}</view>
+      <view class="text-sm text-gray mt-10" wx:if="{{task.deadline}}">截止时间: {{task.deadline}}</view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <!-- 待接单：他人可见 → 接单按钮 -->
+    <button class="btn-primary flex-1" wx:if="{{task.status === 0 && task.publisherId !== userInfo.userId}}"
+            bindtap="takeTask" loading="{{taking}}">接单</button>
+
+    <!-- 待接单：发布者自己 → 编辑 + 取消 -->
+    <block wx:if="{{task.status === 0 && task.publisherId === userInfo.userId}}">
+      <button class="btn-outline flex-1" style="margin-right:16rpx" bindtap="cancelTask">取消任务</button>
+      <button class="btn-primary flex-1" bindtap="editTask">修改任务</button>
+    </block>
+
+    <!-- 已完成：接单者 → 评价发布者 -->
+    <block wx:if="{{task.status === 2 && task.takerId === userInfo.userId}}">
+      <button class="btn-primary flex-1" bindtap="evaluatePublisher">评价发布者</button>
+    </block>
+
+    <!-- 已接单：接单者 → 联系发布者 + 确认送达 + 放弃 -->
+    <block wx:if="{{task.status === 1 && task.takerId === userInfo.userId}}">
+      <button class="btn-outline flex-1" style="margin-right:12rpx" bindtap="contactPublisher">联系</button>
+      <button class="btn-outline flex-1" style="margin-right:12rpx;color:#FC8181;border-color:#FC8181" bindtap="giveUpTask">放弃</button>
+      <button class="btn-primary flex-1" bindtap="completeTask">确认送达</button>
+    </block>
+
+    <!-- 已接单：发布者 → 联系接单者 + 确认完成 -->
+    <block wx:if="{{task.status === 1 && task.publisherId === userInfo.userId}}">
+      <button class="btn-outline flex-1" style="margin-right:16rpx" bindtap="contactTaker">联系接单者</button>
+      <button class="btn-primary flex-1" bindtap="completeTask">确认完成</button>
+    </block>
+
+    <view bindtap="doReport" style="width:80rpx;text-align:center;flex-shrink:0;padding:8rpx 0">
+      <text style="font-size:22rpx;color:var(--text-muted)">举报</text>
+    </view>
+  </view>
+</view>
+<view wx:if="{{loading}}" class="load-more">加载中...</view>
