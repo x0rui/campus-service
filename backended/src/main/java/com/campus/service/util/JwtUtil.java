@@ -36,13 +36,13 @@ public class JwtUtil {
      */
     public String generateToken(Long userId, String openid, Integer role) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", userId);
-        claims.put("openid", openid);
-        claims.put("role", role);
+        claims.put("userId", userId);// 用户ID
+        claims.put("openid", openid);// 微信openid
+        claims.put("role", role);// 角色 0学生/1社团管理员/2系统管理员
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setIssuedAt(new Date())// 签发时间
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))// 过期时间
                 .signWith(SignatureAlgorithm.HS256, secret) // 使用HS256算法和密钥生成JWT令牌
                 .compact();
     }

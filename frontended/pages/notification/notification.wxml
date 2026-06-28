@@ -1,0 +1,29 @@
+<view class="notify-page">
+  <view class="notify-header" wx:if="{{notifications.length > 0}}">
+    <text class="notify-count">{{notifications.length}} 条通知</text>
+    <text class="notify-mark-all" bindtap="markAllRead">全部已读</text>
+  </view>
+
+  <view wx:if="{{notifications.length === 0 && !loading}}" class="notify-empty">
+    <view class="empty-icon">🔔</view>
+    <text class="empty-text">暂无通知</text>
+  </view>
+
+  <view wx:for="{{notifications}}" wx:key="id"
+        class="notify-row {{item.isRead === 0 ? 'unread' : ''}}"
+        bindtap="markRead"
+        data-id="{{item.id}}"
+        data-type="{{item.type}}"
+        data-relatedid="{{item.relatedId}}">
+    <view class="notify-dot" wx:if="{{item.isRead === 0}}"></view>
+    <view class="notify-body">
+      <view class="notify-title">{{item.title}}</view>
+      <view class="notify-content">{{item.content}}</view>
+      <view class="notify-time">{{item.createTime}}</view>
+    </view>
+    <view class="notify-arrow">></view>
+  </view>
+
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+  <view class="safe-bottom"></view>
+</view>

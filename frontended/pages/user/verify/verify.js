@@ -10,12 +10,28 @@ Page({
   },
 
   onLoad() {
+    // 先从缓存读取，再从API拉取最新数据
     var u = wx.getStorageSync('userInfo') || {};
-    if (u.realName) {
-      this.setData({ verifyName: u.realName, verifyStuId: u.studentId, verifyPhone: u.phone,
-        verifyCollege: u.college, verifyMajor: u.major, verifyClassName: u.className,
-        verifyAge: u.age?String(u.age):'', verifyGender: u.gender||'' });
-    }
+    if (u.realName) this.applyVerifyData(u);
+    var self = this;
+    api.get('/api/user/info').then(function(res) {
+      if (res && (res.user || res.nickName)) {
+        var fresh = res.user || res;
+        // 合并进缓存
+        var cached = wx.getStorageSync('userInfo') || {};
+        Object.assign(cached, fresh);
+        wx.setStorageSync('userInfo', cached);
+        getApp().globalData.userInfo = cached;
+        self.applyVerifyData(cached);
+      }
+    }).catch(function(){});
+  },
+
+  applyVerifyData(u) {
+    if (!u.realName) return;
+    this.setData({ verifyName: u.realName, verifyStuId: u.studentId, verifyPhone: u.phone,
+      verifyCollege: u.college, verifyMajor: u.major, verifyClassName: u.className,
+      verifyAge: u.age?String(u.age):'', verifyGender: u.gender||'' });
   },
 
   chooseCardFront() {

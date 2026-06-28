@@ -53,4 +53,10 @@ public interface TaskMapper extends BaseMapper<Task> {
     // 接单者放弃任务，退回待接单状态
     @Update("UPDATE task SET status = 0, taker_id = NULL, take_time = NULL WHERE task_id = #{taskId} AND status = 1 AND taker_id = #{takerId}")
     int giveUpTask(@Param("taskId") Long taskId, @Param("takerId") Long takerId);
+
+    @Select("SELECT COUNT(*) FROM task WHERE taker_id = #{userId} AND status = 2")
+    int countCompletedByTaker(@Param("userId") Long userId);
+
+    @Select("SELECT COUNT(*) FROM task WHERE taker_id = #{userId} AND status IN (1,2,3)")
+    int countTakenByTaker(@Param("userId") Long userId);
 }

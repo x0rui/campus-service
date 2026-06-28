@@ -121,6 +121,13 @@ Page({
     });
   },
 
+  evaluateTaker() {
+    wx.navigateTo({
+      url: '/pages/evaluation/evaluation?orderId=' + this.data.task.taskId +
+           '&orderType=0&targetId=' + this.data.task.takerId + '&isTask=1'
+    });
+  },
+
   contactPublisher() {
     wx.navigateTo({ url: '/pages/chat/chat?otherId=' + this.data.task.publisherId });
   },

@@ -19,7 +19,7 @@ public class GoodsService {
         this.sensitiveWordService = sensitiveWordService;
     }
 
-    @CacheEvict(cacheNames = "goods:index", allEntries = true)
+    @CacheEvict(cacheNames = {"goods:index", "goods:detail", "goods:category"}, allEntries = true)
     public Goods publish(Goods goods) {
         goods.setStatus(0);
         goods.setBrowseCount(0);
@@ -31,6 +31,7 @@ public class GoodsService {
         return sensitiveWordService.check(text);
     }
 
+    // 分页获取首页物品列表
     @Cacheable(cacheNames = "goods:index", key = "#page")
     public List<Goods> getIndexList(int page) {
         return goodsMapper.selectOnSaleList(page * 10, 10);
@@ -44,6 +45,7 @@ public class GoodsService {
         return goodsMapper.selectList(null);
     }
 
+    @Cacheable(cacheNames = "goods:category", key = "#category")
     public List<Goods> getByCategory(String category) {
         return goodsMapper.selectByCategory(category);
     }
@@ -53,6 +55,7 @@ public class GoodsService {
     }
 
     // 获取详情（原子增加浏览量，避免竞态）
+    @Cacheable(cacheNames = "goods:detail", key = "#goodsId")
     public Goods getDetail(Long goodsId, Long userId) {
         return getDetail(goodsId, userId, false);
     }
@@ -74,7 +77,7 @@ public class GoodsService {
     }
 
     // 状态流转校验：0→1(售出) 或 0→2(下架)，其他不允许
-    @CacheEvict(cacheNames = "goods:index", allEntries = true)
+    @CacheEvict(cacheNames = {"goods:index", "goods:detail", "goods:category"}, allEntries = true)
     public String updateStatus(Long goodsId, Integer status, Long buyerId, Long sellerId) {
         Goods goods = goodsMapper.selectById(goodsId);
         if (goods == null) return "物品不存在";
@@ -93,7 +96,7 @@ public class GoodsService {
         return null;
     }
 
-    @CacheEvict(cacheNames = "goods:index", allEntries = true)
+    @CacheEvict(cacheNames = {"goods:index", "goods:detail", "goods:category"}, allEntries = true)
     public boolean updateGoods(Long goodsId, Long userId, Goods update) {
         Goods goods = goodsMapper.selectById(goodsId);
         if (goods == null || !goods.getUserId().equals(userId) || goods.getStatus() != 0) {
@@ -108,7 +111,7 @@ public class GoodsService {
     }
 
     // 管理员强制操作，不受状态流转限制
-    @CacheEvict(cacheNames = "goods:index", allEntries = true)
+    @CacheEvict(cacheNames = {"goods:index", "goods:detail", "goods:category"}, allEntries = true)
     public boolean adminForceOffline(Long goodsId) {
         Goods goods = goodsMapper.selectById(goodsId);
         if (goods == null) return false;

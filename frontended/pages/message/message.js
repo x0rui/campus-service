@@ -5,7 +5,8 @@ Page({
   data: {
     conversations: [],
     loading: true,
-    userId: null
+    userId: null,
+    unreadNotifications: 0
   },
 
   onLoad() {
@@ -18,12 +19,29 @@ Page({
   onShow() {
     if (this.data.userId) {
       this.loadConversations();
+      this.loadBadge();
     } else {
       const userInfo = wx.getStorageSync('userInfo');
       if (userInfo) {
-        this.setData({ userId: userInfo.userId }, () => this.loadConversations());
+        this.setData({ userId: userInfo.userId }, () => {
+          this.loadConversations();
+          this.loadBadge();
+        });
       }
     }
+  },
+
+  async loadBadge() {
+    try {
+      const badge = await api.get('/api/user/badge');
+      if (badge) {
+        this.setData({ unreadNotifications: badge.unreadNotifications || 0 });
+      }
+    } catch (e) {}
+  },
+
+  goNotifications() {
+    wx.navigateTo({ url: '/pages/notification/notification' });
   },
 
   async loadConversations() {

@@ -11,12 +11,14 @@ import java.util.*;
 public class TaskService {
 
     private final TaskMapper taskMapper;
+    private final NotificationService notificationService;
 
     @Value("${platform.max-task-fee}")
     private int maxTaskFee;
 
-    public TaskService(TaskMapper taskMapper) {
+    public TaskService(TaskMapper taskMapper, NotificationService notificationService) {
         this.taskMapper = taskMapper;
+        this.notificationService = notificationService;
     }
 
     public Task publish(Task task) {
@@ -66,6 +68,10 @@ public class TaskService {
         // 更新任务状态，乐观锁：update 时检查 status=0，避免并发
         int rows = taskMapper.takeTask(taskId, takerId);
         if (rows > 0) {
+            try {
+                notificationService.send(task.getPublisherId(), 1, "任务已被接单",
+                        "你的跑腿任务「" + (task.getPickupLocation() + "→" + task.getDeliveryLocation()) + "」已被接单", taskId);
+            } catch (Exception ignored) {}
             return null;
         }
         return "任务已被抢，再看看别的吧";
@@ -88,7 +94,15 @@ public class TaskService {
         }
         task.setStatus(2);
         task.setCompleteTime(java.time.LocalDateTime.now());
-        return taskMapper.updateById(task) > 0;
+        boolean ok = taskMapper.updateById(task) > 0;
+        if (ok) {
+            try {
+                Long otherId = isPublisher ? task.getTakerId() : task.getPublisherId();
+                notificationService.send(otherId, 1, "任务已完成",
+                        "跑腿任务「" + (task.getPickupLocation() + "→" + task.getDeliveryLocation()) + "」已完成", taskId);
+            } catch (Exception ignored) {}
+        }
+        return ok;
     }
 
     public boolean updateTask(Long taskId, Long userId, Task update) {
@@ -116,7 +130,14 @@ public class TaskService {
             return "操作失败";
         }
         int rows = taskMapper.giveUpTask(taskId, userId);
-        return rows > 0 ? null : "操作失败";
+        if (rows > 0) {
+            try {
+                notificationService.send(task.getPublisherId(), 1, "接单者放弃任务",
+                        "跑腿任务「" + (task.getPickupLocation() + "→" + task.getDeliveryLocation()) + "」的接单者已放弃", taskId);
+            } catch (Exception ignored) {}
+            return null;
+        }
+        return "操作失败";
     }
 
     public boolean cancelTask(Long taskId, Long userId) {
@@ -163,5 +184,13 @@ public class TaskService {
         if (completed > 0) {
             System.out.println("自动完成了 " + completed + " 个截止时间已过的进行中跑腿任务");
         }
+    }
+
+    public int countCompletedByTaker(Long userId) {
+        return taskMapper.countCompletedByTaker(userId);
+    }
+
+    public int countTakenByTaker(Long userId) {
+        return taskMapper.countTakenByTaker(userId);
     }
 }

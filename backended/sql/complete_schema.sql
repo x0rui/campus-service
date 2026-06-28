@@ -337,8 +337,26 @@ CREATE TABLE `operation_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='操作日志表';
 
 -- ============================================
--- ER 图关系说明
+-- 17. notification 系统通知表
+-- 用途: 实时推送系统通知给用户
+-- 关系: user_id → user.user_id
 -- ============================================
+CREATE TABLE `notification` (
+    `id`          BIGINT NOT NULL AUTO_INCREMENT,
+    `user_id`     BIGINT NOT NULL COMMENT '接收用户ID',
+    `type`        TINYINT NOT NULL DEFAULT 0 COMMENT '类型: 0系统 1任务 2组局 3社团 4闲置 5举报',
+    `title`       VARCHAR(128) NOT NULL COMMENT '通知标题',
+    `content`     VARCHAR(512) NOT NULL COMMENT '通知内容',
+    `related_id`  BIGINT DEFAULT NULL COMMENT '关联对象ID(可跳转)',
+    `is_read`     TINYINT NOT NULL DEFAULT 0 COMMENT '0未读 1已读',
+    `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `idx_user_read` (`user_id`, `is_read`),
+    KEY `idx_create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统通知表';
+
+-- user 表新增信誉分字段（如已存在请手动 ALTER）
+-- ALTER TABLE `user` ADD COLUMN `credit_score` INT DEFAULT 60 COMMENT '信誉分0-100';
 -- user ──< goods         (1:N, 发布)
 -- user ──< goods         (1:N, 购买, buyer_id)
 -- user ──< task          (1:N, 发布/接单)

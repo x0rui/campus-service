@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campus.service.entity.User;
 import com.campus.service.mapper.UserMapper;
 import com.campus.service.util.JwtUtil;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +36,7 @@ public class UserService {
             user.setAvatarUrl(avatarUrl);
             user.setRole(0);        // 默认普通学生
             user.setStatus(0);      // 默认正常
+            user.setCreditScore(60);// 默认信誉分
             userMapper.insert(user);// 插入数据库
         } else if (user.getStatus() == 1) {
             return null; // 账号被禁用了 → 返回 null
@@ -48,14 +51,17 @@ public class UserService {
         return result;
     }
 
+    @Cacheable(cacheNames = "user:detail", key = "#userId")
     public User getUserById(Long userId) {
         return userMapper.selectById(userId);
     }
 
+    @CacheEvict(cacheNames = "user:detail", key = "#user.userId")
     public boolean updateUser(User user) {
         return userMapper.updateById(user) > 0;
     }
 
+    @CacheEvict(cacheNames = "user:detail", key = "#userId")
     public boolean bindInfo(Long userId, String realName, String studentId, String phone,
                            String college, String major, String className,
                            Integer age, String gender) {
@@ -72,6 +78,7 @@ public class UserService {
         return userMapper.updateById(user) > 0;
     }
 
+    @CacheEvict(cacheNames = "user:detail", key = "#userId")
     public boolean updateRole(Long userId, Integer role) {
         User user = userMapper.selectById(userId);
         if (user == null) return false;

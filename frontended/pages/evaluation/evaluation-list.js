@@ -31,6 +31,10 @@ Page({
     var self = this;
     var tasks = (list || []).map(function(item) {
       var otherId = self.data.currentTab === 0 ? item.evaluatorId : item.targetId;
+      if (!otherId) {
+        item._otherName = '匿名用户';
+        return Promise.resolve(item);
+      }
       return api.get('/api/user/simple/' + otherId).then(function(user) {
         item._otherName = user ? (user.nickName || '微信用户') : '微信用户';
         return item;

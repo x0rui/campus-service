@@ -101,6 +101,22 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
+    public static void pushNotification(Long userId, com.campus.service.entity.Notification notification) {
+        WebSocketSession session = onlineUsers.get(userId);
+        if (session != null && session.isOpen()) {
+            try {
+                java.util.Map<String, Object> data = new java.util.HashMap<>();
+                data.put("type", "notification");
+                data.put("title", notification.getTitle());
+                data.put("content", notification.getContent());
+                data.put("relatedId", notification.getRelatedId() != null ? notification.getRelatedId() : 0);
+                data.put("createTime", notification.getCreateTime() != null ? notification.getCreateTime().toString() : "");
+                String json = new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(data);
+                session.sendMessage(new TextMessage(json));
+            } catch (Exception ignored) {}
+        }
+    }
+
     private Long getUserId(WebSocketSession session) {
         URI uri = session.getUri();
         if (uri == null) return null;

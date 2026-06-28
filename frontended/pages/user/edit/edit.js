@@ -9,7 +9,24 @@ Page({
   },
 
   onLoad() {
+    // 先从缓存读取，再从API拉取最新数据
     var u = wx.getStorageSync('userInfo') || {};
+    this.applyUserData(u);
+    var self = this;
+    api.get('/api/user/info').then(function(res) {
+      if (res && (res.user || res.nickName)) {
+        var fresh = res.user || res;
+        // 合并进缓存
+        var cached = wx.getStorageSync('userInfo') || {};
+        Object.assign(cached, fresh);
+        wx.setStorageSync('userInfo', cached);
+        getApp().globalData.userInfo = cached;
+        self.applyUserData(cached);
+      }
+    }).catch(function(){});
+  },
+
+  applyUserData(u) {
     var hobbies = (u.hobbies||'').split(',').filter(function(h){return h.trim();});
     this.setData({
       editNickName: u.nickName||'', editAvatar: u.avatarUrl||'', editPhone: u.phone||'',

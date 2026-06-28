@@ -12,9 +12,12 @@
           <text wx:if="{{userInfo.role===0}}"> · 学生</text>
           <text wx:elif="{{userInfo.role===1}}"> · 社团管理员</text>
           <text wx:elif="{{userInfo.role===2}}"> · 系统管理员</text>
-           · ⭐ {{avgScore.toFixed(1)}}
+           · ⭐ {{avgScore.toFixed(1)}} · 信誉 {{userInfo.creditScore || 60}}分
         </view>
         <view wx:if="{{userInfo.realName}}" class="school-info">{{userInfo.college}} · {{userInfo.realName}}</view>
+        <view wx:if="{{userInfo.realName}}" class="school-info" style="font-size:22rpx;color:var(--text-muted);margin-top:4rpx">
+          学号: {{userInfo.studentId || '无'}} · 手机: {{userInfo.phone || '无'}}
+        </view>
         <view wx:if="{{!userInfo.realName}}" class="unverified" catchtap="showVerifyForm">未实名认证 →</view>
       </view>
     </view>

@@ -17,10 +17,12 @@ public class TeamService {
 
     private final TeamMapper teamMapper;
     private final TeamJoinMapper teamJoinMapper;
+    private final NotificationService notificationService;
 
-    public TeamService(TeamMapper teamMapper, TeamJoinMapper teamJoinMapper) {
+    public TeamService(TeamMapper teamMapper, TeamJoinMapper teamJoinMapper, NotificationService notificationService) {
         this.teamMapper = teamMapper;
         this.teamJoinMapper = teamJoinMapper;
+        this.notificationService = notificationService;
     }
 
     public Team create(Team team) {
@@ -153,6 +155,10 @@ public class TeamService {
             join.setStatus(1);
             teamJoinMapper.updateById(join);
             teamMapper.autoFull(team.getTeamId());
+            try {
+                notificationService.send(join.getUserId(), 2, "组局申请已通过",
+                        "你申请的组局「" + (team.getTitle() != null ? team.getTitle() : "组局活动") + "」已通过审核", team.getTeamId());
+            } catch (Exception ignored) {}
         } else {
             join.setStatus(2);
             teamJoinMapper.updateById(join);

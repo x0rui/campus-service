@@ -4,11 +4,10 @@ import com.campus.service.annotation.OpLog;
 import com.campus.service.dto.Result;
 import com.campus.service.entity.ClubApplication;
 import com.campus.service.entity.ClubMember;
-import com.campus.service.entity.Message;
 import com.campus.service.entity.User;
 import com.campus.service.mapper.ClubApplicationMapper;
 import com.campus.service.mapper.ClubMemberMapper;
-import com.campus.service.mapper.MessageMapper;
+import com.campus.service.service.NotificationService;
 import com.campus.service.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
@@ -21,13 +20,13 @@ public class ClubApplicationController {
 
     private final ClubApplicationMapper clubApplicationMapper;
     private final UserService userService;
-    private final MessageMapper messageMapper;
+    private final NotificationService notificationService;
     private final ClubMemberMapper clubMemberMapper;
 
-    public ClubApplicationController(ClubApplicationMapper clubApplicationMapper, UserService userService, MessageMapper messageMapper, ClubMemberMapper clubMemberMapper) {
+    public ClubApplicationController(ClubApplicationMapper clubApplicationMapper, UserService userService, NotificationService notificationService, ClubMemberMapper clubMemberMapper) {
         this.clubApplicationMapper = clubApplicationMapper;
         this.userService = userService;
-        this.messageMapper = messageMapper;
+        this.notificationService = notificationService;
         this.clubMemberMapper = clubMemberMapper;
     }
 
@@ -129,14 +128,7 @@ public class ClubApplicationController {
                     content += "，原因：" + rejectReason;
                 }
             }
-            Message msg = new Message();
-            msg.setSessionId("1_" + ca.getUserId());
-            msg.setSenderId(1L);
-            msg.setReceiverId(ca.getUserId());
-            msg.setContent(content);
-            msg.setMsgType(0);
-            msg.setIsRead(0);
-            messageMapper.insert(msg);
+            notificationService.send(ca.getUserId(), 3, "社团审核结果", content, ca.getAppId());
         } catch (Exception ignored) {}
         return Result.ok(approved ? "已通过" : (rejectReason != null && !rejectReason.isEmpty() ? rejectReason : "已拒绝"));
     }

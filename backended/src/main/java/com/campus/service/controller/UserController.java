@@ -28,8 +28,9 @@ public class UserController {
     }
 
     /**
-     * 整个登录流程（一句话概括）
-     * 用户微信登录 → 后端用 code 换 openid → 生成 JWT 令牌 → 返回给前端 → 前端每次请求带上令牌 → 后端拦截器校验令牌 → 拿到用户身份
+     * 整个登录流程：
+     * 用户微信登录 → 后端用 code 换 openid → 生成 JWT 令牌 →
+     * 返回给前端 → 前端每次请求带上令牌 → 后端拦截器校验令牌 → 拿到用户身份
      */
     @PostMapping("/login")
     public Result<Map<String, Object>> login(@RequestBody Map<String, String> body) {
@@ -69,10 +70,8 @@ public class UserController {
         if (user == null) return Result.fail(401, "用户不存在");
 
         // 如果角色变了，自动刷新 token
-        // 脱敏
+        // 脱敏（不隐藏手机号和学号，用户查看自己的信息）
         user.setOpenid(null);
-        user.setPhone(null);
-        user.setStudentId(null);
         Map<String, Object> map = new java.util.HashMap<>();
         map.put("user", user);
         if (tokenRole != null && !tokenRole.equals(user.getRole()) && token != null) {
@@ -150,6 +149,7 @@ public class UserController {
         counts.put("pendingClubApps", badgeService.getPendingClubApps(userId));
         counts.put("handledReports", badgeService.getHandledReports(userId, reportsViewTime));
         counts.put("pendingTeamJoins", badgeService.getPendingTeamJoins(userId));
+        counts.put("unreadNotifications", badgeService.getUnreadNotifications(userId));
 
         if (role != null && role >= 2) {
             counts.put("pendingClubChecks", badgeService.getPendingClubChecks());

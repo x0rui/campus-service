@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @TableName("user")
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 839524642830358298L;
     @TableId(type = IdType.AUTO)
     private Long userId;
     private String openid;
@@ -25,6 +27,7 @@ public class User {
     private String gender;
     private String hobbies;
     private Integer status;
+    private Integer creditScore;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }

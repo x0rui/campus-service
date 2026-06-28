@@ -1,9 +1,7 @@
 package com.campus.service.service;
 
 import com.campus.service.entity.Report;
-import com.campus.service.entity.Message;
 import com.campus.service.mapper.ReportMapper;
-import com.campus.service.mapper.MessageMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -14,11 +12,11 @@ import java.util.List;
 public class ReportService {
 
     private final ReportMapper reportMapper;
-    private final MessageMapper messageMapper;
+    private final NotificationService notificationService;
 
-    public ReportService(ReportMapper reportMapper, MessageMapper messageMapper) {
+    public ReportService(ReportMapper reportMapper, NotificationService notificationService) {
         this.reportMapper = reportMapper;
-        this.messageMapper = messageMapper;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -67,14 +65,7 @@ public class ReportService {
         try {
             String result = status == 1 ? "已确认违规" : "已驳回";
             String content = "你举报的「" + (r.getTargetTitle() != null ? r.getTargetTitle() : r.getTargetType()) + "」" + result + "。" + (handleNote != null && !handleNote.isEmpty() ? " 处理备注：" + handleNote : "");
-            Message msg = new Message();
-            msg.setSessionId("1_" + r.getReporterId());
-            msg.setSenderId(1L);
-            msg.setReceiverId(r.getReporterId());
-            msg.setContent(content);
-            msg.setMsgType(0);
-            msg.setIsRead(0);
-            messageMapper.insert(msg);
+            notificationService.send(r.getReporterId(), 5, "举报处理结果", content, r.getReportId());
         } catch (Exception ignored) {}
 
         return true;

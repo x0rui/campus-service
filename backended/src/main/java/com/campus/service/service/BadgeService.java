@@ -2,6 +2,7 @@ package com.campus.service.service;
 
 import com.campus.service.mapper.ClubApplicationMapper;
 import com.campus.service.mapper.MessageMapper;
+import com.campus.service.mapper.NotificationMapper;
 import com.campus.service.mapper.ReportMapper;
 import com.campus.service.mapper.TeamJoinMapper;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,14 @@ public class BadgeService {
     private final ClubApplicationMapper clubApplicationMapper;
     private final ReportMapper reportMapper;
     private final TeamJoinMapper teamJoinMapper;
+    private final NotificationMapper notificationMapper;
 
-    public BadgeService(MessageMapper messageMapper, ClubApplicationMapper clubApplicationMapper, ReportMapper reportMapper, TeamJoinMapper teamJoinMapper) {
+    public BadgeService(MessageMapper messageMapper, ClubApplicationMapper clubApplicationMapper, ReportMapper reportMapper, TeamJoinMapper teamJoinMapper, NotificationMapper notificationMapper) {
         this.messageMapper = messageMapper;
         this.clubApplicationMapper = clubApplicationMapper;
         this.reportMapper = reportMapper;
         this.teamJoinMapper = teamJoinMapper;
+        this.notificationMapper = notificationMapper;
     }
 
     public int getUnreadMessages(Long userId) {
@@ -88,5 +91,9 @@ public class BadgeService {
                         "SELECT team_id FROM team WHERE user_id = " + userId));
             return count != null ? count.intValue() : 0;
         } catch (Exception e) { return 0; }
+    }
+
+    public int getUnreadNotifications(Long userId) {
+        return notificationMapper.countUnread(userId);
     }
 }

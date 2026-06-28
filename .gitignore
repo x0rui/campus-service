@@ -16,9 +16,16 @@ backended/target/
 *.pdf
 *.docx
 *.csv
+*.doc
+*.zip
 阿里/
 Redis-x64-5.0.14.1/
 .claude/
+毕业论文/
+毕业论文模版及相关材料/
+课程设计文档/
+课程设计文档模板/
+课程设计的图/
 
 # === OS ===
 .DS_Store

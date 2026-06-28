@@ -32,7 +32,8 @@
     "pages/report/my/my",
     "pages/poster/create/create",
     "pages/club/square/square",
-    "pages/club/detail/detail"
+    "pages/club/detail/detail",
+    "pages/notification/notification"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FF7E67",

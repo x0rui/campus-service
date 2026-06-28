@@ -66,6 +66,11 @@
       <button class="btn-primary flex-1" bindtap="evaluatePublisher">评价发布者</button>
     </block>
 
+    <!-- 已完成：发布者 → 评价接单者 -->
+    <block wx:if="{{task.status === 2 && task.publisherId === userInfo.userId}}">
+      <button class="btn-primary flex-1" bindtap="evaluateTaker">评价接单者</button>
+    </block>
+
     <!-- 已接单：接单者 → 联系发布者 + 确认送达 + 放弃 -->
     <block wx:if="{{task.status === 1 && task.takerId === userInfo.userId}}">
       <button class="btn-outline flex-1" style="margin-right:12rpx" bindtap="contactPublisher">联系</button>
