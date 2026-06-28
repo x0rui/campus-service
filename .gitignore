@@ -12,6 +12,7 @@ backended/target/
 # === 文档/资料/个人文件 ===
 123/
 *.md
+!README.md
 *.txt
 *.pdf
 *.docx
