@@ -157,7 +157,6 @@ user, goods, task, message, evaluation, team, team_join, announcement, comment, 
 
 ## 待完善
 
-- 微信登录接入真实 API（目前开发模式用 code hash 模拟）
 - AI 海报 Canvas 保存待修复
 - 敏感词过滤未接入校园圈
 - 建议后续加 TTL 过期策略防缓存雪崩
