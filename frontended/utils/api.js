@@ -56,8 +56,15 @@ function uploadFile(filePath) {
       name: 'file',
       header: { 'Authorization': token || '' },
       success(res) {
-        // 上传接口返回的是字符串，需要手动解析成 JSON
-        const data = JSON.parse(res.data);
+        // 上传接口返回的是字符串，需要手动解析成 JSON。
+        // 注意：401 时后端返回空 body，直接 JSON.parse 会抛异常导致 Promise 永不结束
+        let data;
+        try {
+          data = JSON.parse(res.data);
+        } catch (e) {
+          reject(new Error(res.statusCode === 401 ? '请先登录' : '上传失败(' + res.statusCode + ')'));
+          return;
+        }
         if (data.code === 200) resolve(data.data);
         else reject(new Error(data.message));
       },
