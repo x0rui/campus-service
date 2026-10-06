@@ -33,7 +33,14 @@
     "pages/poster/create/create",
     "pages/club/square/square",
     "pages/club/detail/detail",
-    "pages/notification/notification"
+    "pages/notification/notification",
+    "pages/resource/list/list",
+    "pages/resource/detail/detail",
+    "pages/resource/publish/publish",
+    "pages/resource/my/my",
+    "pages/resource/demand-list/demand-list",
+    "pages/resource/demand-publish/demand-publish",
+    "pages/resource/demand-match/demand-match"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FF7E67",

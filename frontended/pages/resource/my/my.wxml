@@ -1,0 +1,54 @@
+<view class="container">
+  <view class="tab-bar flex-row">
+    <view class="tab-item flex-1 text-center {{tab === 0 ? 'tab-active' : ''}}"
+          data-tab="0" bindtap="switchTab">我上传的</view>
+    <view class="tab-item flex-1 text-center {{tab === 1 ? 'tab-active' : ''}}"
+          data-tab="1" bindtap="switchTab">我收藏的</view>
+  </view>
+
+  <!-- 我上传的 -->
+  <block wx:if="{{tab === 0}}">
+    <view class="card" wx:for="{{mine}}" wx:key="resourceId" style="margin-bottom:16rpx">
+      <view class="card-body" data-id="{{item.resourceId}}" bindtap="goDetail">
+        <view class="flex-row flex-between">
+          <view class="text-base text-bold text-ellipsis flex-1">{{item.title}}</view>
+          <view class="tag {{item.status === 1 ? 'tag-success' : (item.status === 2 ? 'tag-danger' : 'tag-warning')}} text-xs">
+            {{item.statusText}}
+          </view>
+        </view>
+        <view class="text-xs text-muted mt-5">
+          {{item.course}} · {{item.resourceType}} · 下载 {{item.downloadCount}}
+        </view>
+        <view class="text-xs text-danger mt-5" wx:if="{{item.status === 2 && item.rejectReason}}">
+          驳回原因：{{item.rejectReason}}
+        </view>
+      </view>
+      <view class="text-xs text-danger text-right" style="padding:0 24rpx 20rpx"
+            data-id="{{item.resourceId}}" catchtap="remove">删除</view>
+    </view>
+    <view wx:if="{{mine.length === 0 && !loading}}" class="empty-state">
+      <text class="empty-icon">📤</text>
+      <text>还没上传过资料</text>
+    </view>
+  </block>
+
+  <!-- 我收藏的 -->
+  <block wx:else>
+    <view class="card" wx:for="{{favs}}" wx:key="resourceId"
+          style="margin-bottom:16rpx" data-id="{{item.resourceId}}" bindtap="goDetail">
+      <view class="card-body">
+        <view class="text-base text-bold text-ellipsis">{{item.title}}</view>
+        <view class="text-xs text-muted mt-5">{{item.course}} · {{item.resourceType}}</view>
+      </view>
+    </view>
+    <view wx:if="{{favs.length === 0 && !loading}}" class="empty-state">
+      <text class="empty-icon">☆</text>
+      <text>还没有收藏</text>
+    </view>
+  </block>
+
+  <view class="float-btn" bindtap="goPublish">
+    <text style="font-size:40rpx">+</text>
+    <text style="font-size:22rpx">上传</text>
+  </view>
+</view>

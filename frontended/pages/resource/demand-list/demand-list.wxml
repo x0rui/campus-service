@@ -1,0 +1,35 @@
+<view class="container">
+  <view class="tab-bar flex-row">
+    <view class="tab-item flex-1 text-center {{tab === 0 ? 'tab-active' : ''}}"
+          data-tab="0" bindtap="switchTab">求资源广场</view>
+    <view class="tab-item flex-1 text-center {{tab === 1 ? 'tab-active' : ''}}"
+          data-tab="1" bindtap="switchTab">我发布的</view>
+  </view>
+
+  <view class="card" wx:for="{{list}}" wx:key="demandId"
+        style="margin-bottom:16rpx" data-id="{{item.demandId}}" bindtap="goMatch">
+    <view class="card-body">
+      <view class="text-base text-bold">{{item.title}}</view>
+      <view class="flex-row mt-5" style="flex-wrap:wrap">
+        <view class="tag tag-primary text-xs" style="margin-right:10rpx" wx:if="{{item.course}}">{{item.course}}</view>
+        <view class="tag tag-muted text-xs" wx:if="{{item.resourceType}}">{{item.resourceType}}</view>
+      </view>
+      <view class="text-xs text-muted mt-5">
+        已匹配 {{item.matchCount}} 份资料
+        <text wx:if="{{item.status === 1}}" class="text-success"> · 已解决</text>
+        <text wx:if="{{item.status === 2}}" class="text-muted"> · 已关闭</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty-state">
+    <text class="empty-icon">🔍</text>
+    <text>还没有求资源信息</text>
+  </view>
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+
+  <view class="float-btn" bindtap="goPublish">
+    <text style="font-size:40rpx">+</text>
+    <text style="font-size:22rpx">求资源</text>
+  </view>
+</view>

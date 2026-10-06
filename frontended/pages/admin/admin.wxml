@@ -16,12 +16,13 @@
       <view wx:if="{{badgePendingClubChecks>0}}" class="admin-badge"></view>
     </view>
     <view class="admin-tab {{currentTab===8?'admin-tab-active':''}}" bindtap="switchTab" data-tab="8">操作日志</view>
+    <view class="admin-tab {{currentTab===9?'admin-tab-active':''}}" bindtap="switchTab" data-tab="9">资料审核</view>
   </view>
 
   <!-- 右侧内容 -->
   <view class="admin-content">
     <view class="text-bold text-lg" style="margin-bottom:24rpx">
-      {{currentTab===0?'数据统计':currentTab===1?'用户管理':currentTab===2?'物品管理':currentTab===3?'任务管理':currentTab===4?'组局管理':currentTab===5?'校园圈':currentTab===6?'举报管理':currentTab===7?'社团审核':'操作日志'}}
+      {{currentTab===0?'数据统计':currentTab===1?'用户管理':currentTab===2?'物品管理':currentTab===3?'任务管理':currentTab===4?'组局管理':currentTab===5?'校园圈':currentTab===6?'举报管理':currentTab===7?'社团审核':currentTab===8?'操作日志':'学习资料审核'}}
     </view>
 
     <!-- 数据统计 -->
@@ -221,6 +222,31 @@
           <text class="text-xs text-muted">{{item.createTime}}</text>
         </view>
         <view class="text-xs text-muted mt-5">{{item.method}}</view>
+      </view>
+    </view>
+
+    <!-- 学习资料审核 -->
+    <view wx:if="{{currentTab === 9}}">
+      <view class="flex-row mb-10" style="gap:8rpx;flex-wrap:wrap">
+        <view class="category-tag {{resourceStatus===0?'category-active':''}}" bindtap="switchResourceStatus" data-status="0">待审核</view>
+        <view class="category-tag {{resourceStatus===1?'category-active':''}}" bindtap="switchResourceStatus" data-status="1">已通过</view>
+        <view class="category-tag {{resourceStatus===2?'category-active':''}}" bindtap="switchResourceStatus" data-status="2">已拒绝</view>
+      </view>
+      <view wx:if="{{resourceList.length === 0}}" class="empty-state" style="padding:100rpx 0"><text>暂无资料</text></view>
+      <view class="card" wx:for="{{resourceList}}" wx:key="resourceId" style="margin-bottom:12rpx">
+        <view class="flex-row flex-between">
+          <view class="flex-1">
+            <view class="text-bold text-ellipsis">{{item.title}}</view>
+            <view class="text-sm text-gray mt-5">{{item.course}} · {{item.resourceType}} · 上传者:{{item.userId}}</view>
+            <view class="text-xs text-muted mt-5">{{item.fileName}} ({{item.fileExt}})</view>
+            <view class="tag mt-5 {{item.status===0?'tag-warning':item.status===1?'tag-success':'tag-danger'}}">{{item.status===0?'待审核':item.status===1?'已通过':'已拒绝'}}</view>
+            <view wx:if="{{item.status===2 && item.rejectReason}}" class="text-xs text-danger mt-5">驳回原因：{{item.rejectReason}}</view>
+          </view>
+        </view>
+        <view class="flex-row mt-10" style="gap:12rpx" wx:if="{{item.status===0}}">
+          <view class="btn-small" style="background:#48BB78;color:#fff;border-radius:var(--radius-sm);padding:10rpx 0;text-align:center;flex:1;font-size:22rpx" bindtap="auditResource" data-id="{{item.resourceId}}" data-approved="true">通过</view>
+          <view class="btn-small" style="background:#FC8181;color:#fff;border-radius:var(--radius-sm);padding:10rpx 0;text-align:center;flex:1;font-size:22rpx" bindtap="auditResource" data-id="{{item.resourceId}}" data-approved="false">拒绝</view>
+        </view>
       </view>
     </view>
 

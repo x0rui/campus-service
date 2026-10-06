@@ -1,0 +1,7 @@
+.btn-outline {
+  padding: 10rpx 28rpx;
+  border: 2rpx solid #FF7E67;
+  color: #FF7E67;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+}

@@ -1,0 +1,51 @@
+<view class="container">
+  <view class="search-bar" style="margin-bottom:16rpx">
+    <text class="search-icon">◯</text>
+    <input class="search-input" placeholder="搜索课程、资料标题..." value="{{keyword}}"
+           bindinput="onKeywordInput" bindconfirm="onSearch" />
+    <text class="text-sm text-primary" bindtap="onSearch" style="flex-shrink:0;margin-left:12rpx">搜索</text>
+  </view>
+
+  <view class="flex-row flex-between" style="margin-bottom:12rpx">
+    <picker mode="selector" range="{{courses}}" value="{{courseIndex}}" bindchange="onCourseChange">
+      <view class="tag tag-primary" style="padding:8rpx 20rpx">
+        {{courses[courseIndex]}} ▾
+      </view>
+    </picker>
+    <view class="flex-row">
+      <text class="text-sm text-muted" bindtap="goMy" style="margin-right:24rpx">我的</text>
+      <text class="text-sm text-primary" bindtap="goDemand">求资源 →</text>
+    </view>
+  </view>
+
+  <scroll-view class="category-scroll" scroll-x>
+    <view class="category-tag {{(!activeType && item === '全部') || activeType === item ? 'category-active' : ''}}"
+          wx:for="{{types}}" wx:key="*this"
+          data-type="{{item}}" bindtap="filterType">{{item}}</view>
+  </scroll-view>
+
+  <view class="card" wx:for="{{list}}" wx:key="resourceId"
+        data-id="{{item.resourceId}}" bindtap="goDetail" style="margin-bottom:16rpx">
+    <view class="card-body">
+      <view class="text-base text-bold text-ellipsis">📄 {{item.title}}</view>
+      <view class="flex-row mt-5" style="flex-wrap:wrap">
+        <view class="tag tag-primary text-xs" style="margin-right:10rpx">{{item.course}}</view>
+        <view class="tag tag-muted text-xs">{{item.resourceType}}</view>
+      </view>
+      <view class="text-xs text-muted mt-5">
+        下载 {{item.downloadCount}} · 收藏 {{item.collectCount}} · 浏览 {{item.viewCount}}
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty-state">
+    <text class="empty-icon">📚</text>
+    <text>暂无学习资料</text>
+  </view>
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+
+  <view class="float-btn" bindtap="goPublish">
+    <text style="font-size:40rpx">+</text>
+    <text style="font-size:22rpx">上传</text>
+  </view>
+</view>

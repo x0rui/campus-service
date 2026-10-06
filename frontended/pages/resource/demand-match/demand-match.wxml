@@ -1,0 +1,53 @@
+<view class="container" wx:if="{{demand}}">
+  <view class="card">
+    <view class="card-body">
+      <view class="text-lg text-bold">{{demand.title}}</view>
+      <view class="flex-row mt-5" style="flex-wrap:wrap">
+        <view class="tag tag-primary text-xs" style="margin-right:10rpx" wx:if="{{demand.course}}">{{demand.course}}</view>
+        <view class="tag tag-muted text-xs" wx:if="{{demand.resourceType}}">{{demand.resourceType}}</view>
+      </view>
+      <view class="text-sm text-muted mt-5" wx:if="{{demand.description}}">{{demand.description}}</view>
+    </view>
+  </view>
+
+  <view class="section-heading">匹配到的资料（{{resources.length}}）</view>
+  <view class="card" wx:for="{{resources}}" wx:key="resourceId"
+        style="margin-bottom:16rpx" data-id="{{item.resourceId}}" bindtap="goDetail">
+    <view class="card-body">
+      <view class="text-base text-bold text-ellipsis">📄 {{item.title}}</view>
+      <view class="text-xs text-muted mt-5">
+        {{item.course}} · {{item.resourceType}} · 下载 {{item.downloadCount}}
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{resources.length === 0}}" class="text-sm text-muted text-center" style="padding:20rpx 0">
+    暂时没有匹配到资料
+  </view>
+
+  <view class="section-heading">能提供帮助的同学（{{users.length}}）</view>
+  <view class="card" wx:for="{{users}}" wx:key="userId" style="margin-bottom:16rpx">
+    <view class="card-body flex-row flex-between">
+      <view class="flex-row">
+        <view class="avatar-circle avatar-circle-sm">
+          <image wx:if="{{item.avatarUrl}}" class="avatar-image" src="{{item.avatarUrl}}" mode="aspectFill" />
+          <text wx:else class="avatar-circle-text">{{item.nickName ? item.nickName[0] : '同'}}</text>
+        </view>
+        <view style="margin-left:16rpx">
+          <view class="text-base text-bold">{{item.nickName || '同学'}}</view>
+          <view class="text-xs text-muted">{{item.college}} {{item.major}}</view>
+        </view>
+      </view>
+      <view class="btn-outline btn-small" data-id="{{item.userId}}" catchtap="contact">私信</view>
+    </view>
+  </view>
+  <view wx:if="{{users.length === 0}}" class="text-sm text-muted text-center" style="padding:20rpx 0">
+    暂时没有匹配到同学
+  </view>
+
+  <view class="btn-primary text-center" bindtap="markSolved" style="margin:24rpx 0">我已找到，标记为已解决</view>
+</view>
+
+<view wx:elif="{{!loading}}" class="empty-state">
+  <text class="empty-icon">🔍</text>
+  <text>需求不存在</text>
+</view>

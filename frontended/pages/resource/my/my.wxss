@@ -1,0 +1,16 @@
+.tab-bar {
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+}
+.tab-item {
+  padding: 24rpx 0;
+  font-size: 28rpx;
+  color: #666;
+}
+.tab-active {
+  color: #FF7E67;
+  font-weight: 600;
+  border-bottom: 4rpx solid #FF7E67;
+}

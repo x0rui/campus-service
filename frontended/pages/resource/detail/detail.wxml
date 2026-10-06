@@ -1,0 +1,37 @@
+<view class="container" wx:if="{{r}}">
+  <view class="card">
+    <view class="card-body">
+      <view class="text-xl text-bold">📄 {{r.title}}</view>
+      <view class="flex-row mt-5" style="flex-wrap:wrap">
+        <view class="tag tag-primary text-xs" style="margin-right:10rpx">{{r.course}}</view>
+        <view class="tag tag-muted text-xs">{{r.resourceType}}</view>
+      </view>
+      <view class="text-sm text-muted mt-5">
+        {{r.fileName || '学习资料'}} · {{r.fileExt}}
+      </view>
+      <view class="text-xs text-muted mt-5">
+        浏览 {{r.viewCount}} · 下载 {{r.downloadCount}} · 收藏 {{r.collectCount}}
+      </view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{r.description}}">
+    <view class="card-header text-base text-bold">资料说明</view>
+    <view class="card-body text-body">{{r.description}}</view>
+  </view>
+
+  <view class="bottom-bar flex-row">
+    <view class="btn-outline flex-1 text-center" bindtap="collect">
+      {{collected ? '★ 已收藏' : '☆ 收藏'}}
+    </view>
+    <view class="btn-outline flex-1 text-center" bindtap="evaluate" style="margin:0 16rpx">评价</view>
+    <view class="btn-primary flex-1 text-center" bindtap="download">下载</view>
+  </view>
+
+  <view class="text-xs text-muted text-center mt-5" bindtap="report">举报该资料</view>
+</view>
+
+<view wx:elif="{{!loading}}" class="empty-state">
+  <text class="empty-icon">📄</text>
+  <text>资料不存在</text>
+</view>

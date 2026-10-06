@@ -1,0 +1,39 @@
+<view class="container">
+  <view class="card">
+    <view class="card-body">
+      <view class="form-group">
+        <view class="form-label">需求标题</view>
+        <input class="form-input" placeholder="如：求《数据结构》期末真题"
+               value="{{title}}" bindinput="onTitleInput" maxlength="60" />
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">课程</view>
+        <input class="form-input" placeholder="如：数据结构（填了才能匹配到上传过该课程的同学）"
+               value="{{course}}" bindinput="onCourseInput" maxlength="30" />
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">想要的资料类型</view>
+        <picker mode="selector" range="{{types}}" value="{{typeIndex}}" bindchange="onTypeChange">
+          <view class="form-input">{{types[typeIndex]}} ▾</view>
+        </picker>
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">关键词（选填）</view>
+        <input class="form-input" placeholder="如：树、二叉树" value="{{keyword}}" bindinput="onKeywordInput" maxlength="30" />
+      </view>
+
+      <view class="form-group">
+        <view class="form-label">补充说明（选填）</view>
+        <textarea class="form-textarea" placeholder="还有什么要补充的"
+                  value="{{description}}" bindinput="onDescInput" maxlength="300" />
+      </view>
+    </view>
+  </view>
+
+  <view class="btn-primary text-center" bindtap="submit" style="margin:24rpx 0">
+    {{submitting ? '发布中...' : '发布需求'}}
+  </view>
+</view>

@@ -4,8 +4,9 @@ const app = getApp();
 Page({
   data: {
     dashboard: null, userList: [], goodsList: [], taskList: [], teamList: [], postList: [],
-    reportList: [], clubApps: [], logList: [],
+    reportList: [], clubApps: [], logList: [], resourceList: [],
     currentTab: 0, loading: false,
+    resourceStatus: 0,
     goodsKeyword: '', taskKeyword: '', teamKeyword: '', postKeyword: '', reportKeyword: '',
     userKeyword: '',
     postTab: 0, reportStatus: 0, reportType: 'all',
@@ -57,6 +58,40 @@ Page({
     else if (tab === 6) this.loadReports();
     else if (tab === 7) this.loadClubApps();
     else if (tab === 8) this.loadLogs();
+    else if (tab === 9) this.loadResources();
+  },
+
+  // ====== 学习资料审核 ======
+  async loadResources() {
+    this.setData({ loading: true });
+    try {
+      var list = await api.get('/api/resource/admin/list', { status: this.data.resourceStatus });
+      // 解析资源类型不在这里做，后端已返回 resourceType
+      this.setData({ resourceList: list || [], loading: false });
+    } catch(e) { this.setData({ loading: false }); }
+  },
+  switchResourceStatus(e) {
+    var status = parseInt(e.currentTarget.dataset.status);
+    this.setData({ resourceStatus: status });
+    this.loadResources();
+  },
+  async auditResource(e) {
+    var id = e.currentTarget.dataset.id;
+    var approved = e.currentTarget.dataset.approved === 'true';
+    var self = this;
+    var doAudit = function(reason) {
+      api.put('/api/resource/audit/' + id, { status: approved ? 1 : 2, rejectReason: reason || '' })
+        .then(function() { wx.showToast({ title: approved ? '已通过' : '已拒绝', icon: 'success' }); self.loadResources(); })
+        .catch(function() {});
+    };
+    if (approved) {
+      wx.showModal({ title: '确认', content: '通过该资料？', success: function(res) { if (res.confirm) doAudit(''); } });
+    } else {
+      wx.showModal({
+        title: '拒绝资料', editable: true, placeholderText: '填写驳回原因',
+        success: function(res) { if (res.confirm) doAudit(res.content); }
+      });
+    }
   },
 
   // ====== 用户管理 ======
