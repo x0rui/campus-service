@@ -101,6 +101,17 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
+    // 通用 JSON 推送：跑腿实时位置等自定义消息复用同一条 WebSocket 通道
+    public static void pushRaw(Long userId, java.util.Map<String, Object> data) {
+        WebSocketSession session = onlineUsers.get(userId);
+        if (session != null && session.isOpen()) {
+            try {
+                String json = new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(data);
+                session.sendMessage(new TextMessage(json));
+            } catch (Exception ignored) {}
+        }
+    }
+
     public static void pushNotification(Long userId, com.campus.service.entity.Notification notification) {
         WebSocketSession session = onlineUsers.get(userId);
         if (session != null && session.isOpen()) {

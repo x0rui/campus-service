@@ -38,4 +38,8 @@ public class Task implements Serializable {
     private LocalDateTime createTime;
     private LocalDateTime takeTime;
     private LocalDateTime completeTime;
+
+    // 列表展示用：距离当前用户的球面距离（米），不落库
+    @com.baomidou.mybatisplus.annotation.TableField(exist = false)
+    private Double distanceMeters;
 }

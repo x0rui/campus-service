@@ -2,23 +2,32 @@ package com.campus.service.service;
 
 import com.campus.service.entity.Task;
 import com.campus.service.mapper.TaskMapper;
+import com.campus.service.websocket.ChatWebSocketHandler;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TaskService {
 
     private final TaskMapper taskMapper;
     private final NotificationService notificationService;
+    private final TencentMapService mapService;
+    private final StringRedisTemplate redis;
 
     @Value("${platform.max-task-fee}")
     private int maxTaskFee;
 
-    public TaskService(TaskMapper taskMapper, NotificationService notificationService) {
+    public TaskService(TaskMapper taskMapper, NotificationService notificationService,
+                       TencentMapService mapService, StringRedisTemplate redis) {
         this.taskMapper = taskMapper;
         this.notificationService = notificationService;
+        this.mapService = mapService;
+        this.redis = redis;
     }
 
     public Task publish(Task task) {
@@ -29,6 +38,73 @@ public class TaskService {
 
     public List<Task> getSquareList(int page) {
         return taskMapper.selectPendingList(page * 10, 10);
+    }
+
+    // 任务广场"附近优先"：按当前定位到取件点的球面距离升序，再按任务类型筛
+    // 距离在本地算（Haversine），不比直线更精确就不调外部接口，省额度也少一个故障点
+    public List<Task> getNearbyList(Double lat, Double lng, String taskType, int page) {
+        List<Task> all = (taskType == null || taskType.isEmpty())
+                ? taskMapper.selectAllPending()
+                : taskMapper.selectByType(taskType);
+
+        if (lat != null && lng != null) {
+            for (Task t : all) {
+                t.setDistanceMeters(haversine(lat, lng, t.getPickupLat(), t.getPickupLng()));
+            }
+            all.sort(Comparator.comparingDouble(t ->
+                    t.getDistanceMeters() == null ? Double.MAX_VALUE : t.getDistanceMeters()));
+        }
+        int from = Math.min(page * 10, all.size());
+        int to = Math.min(from + 10, all.size());
+        return all.subList(from, to);
+    }
+
+    private static Double haversine(double lat1, double lng1, java.math.BigDecimal lat2, java.math.BigDecimal lng2) {
+        if (lat2 == null || lng2 == null) return null;
+        double R = 6371000;
+        double p2 = lat2.doubleValue();
+        double dLat = Math.toRadians(p2 - lat1);
+        double dLng = Math.toRadians(lng2.doubleValue() - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(p2))
+                * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    // 经纬度 → 文字地址（地图选点后回填用）
+    public String reverseGeocode(double lat, double lng) {
+        return mapService.reverseGeocode(lat, lng);
+    }
+
+    // 接单者上报实时位置：存 Redis（5 分钟过期）+ 经 WebSocket 推给发布者
+    public String reportLocation(Long taskId, Long userId, double lat, double lng) {
+        Task t = taskMapper.selectById(taskId);
+        if (t == null) return "任务不存在";
+        if (t.getStatus() == null || t.getStatus() != 1) return "任务不在进行中";
+        if (!userId.equals(t.getTakerId())) return "只有接单者可以上报位置";
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("type", "location");
+        payload.put("taskId", taskId);
+        payload.put("lat", lat);
+        payload.put("lng", lng);
+        payload.put("time", LocalDateTime.now().toString());
+        try {
+            redis.opsForValue().set("task:loc:" + taskId,
+                    new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(payload),
+                    5, TimeUnit.MINUTES);
+        } catch (Exception ignored) {}
+        ChatWebSocketHandler.pushRaw(t.getPublisherId(), payload);
+        return null;
+    }
+
+    // 发布者取最新位置（WebSocket 不在线时的轮询兜底）
+    public String getLocation(Long taskId) {
+        try {
+            return redis.opsForValue().get("task:loc:" + taskId);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public List<Task> getPendingList() {

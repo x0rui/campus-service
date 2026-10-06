@@ -45,7 +45,8 @@
     "pages/question/wrong/wrong",
     "pages/order/pay/pay",
     "pages/order/list/list",
-    "pages/goods/demand/demand"
+    "pages/goods/demand/demand",
+    "pages/task/tracking/tracking"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FF7E67",

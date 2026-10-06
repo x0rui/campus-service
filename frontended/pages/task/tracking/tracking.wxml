@@ -1,0 +1,26 @@
+<view class="container">
+  <view class="card">
+    <view class="card-body">
+      <view class="text-base text-bold">{{statusText}}</view>
+      <view class="text-xs text-muted mt-5" wx:if="{{updatedAt}}">更新时间：{{updatedAt}}</view>
+    </view>
+  </view>
+
+  <map wx:if="{{lat && lng}}"
+       class="map"
+       latitude="{{lat}}"
+       longitude="{{lng}}"
+       scale="16"
+       show-location="{{true}}"
+       markers="{{markers}}">
+  </map>
+
+  <view wx:else class="empty-state">
+    <text class="empty-icon">📍</text>
+    <text>{{isTaker ? '正在获取你的位置…' : '还没有收到位置上报'}}</text>
+  </view>
+
+  <view wx:if="{{isTaker}}" class="notice">
+    位置由本页面上报。小程序不支持真正的后台持续定位，演示时请保持本页在前台。
+  </view>
+</view>

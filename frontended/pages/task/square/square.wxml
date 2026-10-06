@@ -3,10 +3,12 @@
   <view class="search-bar" style="margin-bottom:16rpx">
     <text class="search-icon">◯</text>
     <input class="search-input" placeholder="搜索任务地点..." value="{{keyword}}" bindinput="onKeywordInput" bindconfirm="onSearch" />
-    <text class="text-sm text-primary" bindtap="onSearch" style="flex-shrink:0;margin-left:12rpx">搜索</text>
+    <view class="link-tap" bindtap="onSearch" style="flex-shrink:0">搜索</view>
   </view>
 
   <scroll-view class="category-scroll" scroll-x>
+    <view class="category-tag {{nearby ? 'category-active' : ''}}"
+          bindtap="toggleNearby">{{nearby ? '✓ 附近优先' : '附近优先'}}</view>
     <view class="category-tag {{activeType === item || (!activeType && item === '全部') ? 'category-active' : ''}}"
           wx:for="{{taskTypes}}" wx:key="*this"
           bindtap="filterByType" data-type="{{item}}">{{item}}</view>
@@ -30,6 +32,7 @@
     <view class="flex-row">
       <view class="location-dot pickup"></view>
       <view class="text-ellipsis flex-1">{{item.pickupLocation}}</view>
+      <view wx:if="{{item.distanceText}}" class="tag tag-warning text-xs">{{item.distanceText}}</view>
     </view>
     <view class="flex-row mt-10">
       <view class="location-dot delivery"></view>
@@ -37,7 +40,11 @@
     </view>
     <view class="flex-row flex-between mt-10 text-sm text-gray">
       <text>截止: {{item.deadline || '不限'}}</text>
-      <text>{{item.createTime}}</text>
+      <view class="flex-row">
+        <text style="margin-right:16rpx">{{item.createTime}}</text>
+        <view wx:if="{{item.status === 1}}" class="link-tap" style="min-height:0;padding:0"
+              data-id="{{item.taskId}}" data-taker="{{item.takerId}}" catchtap="goTracking">看位置</view>
+      </view>
     </view>
   </view>
 

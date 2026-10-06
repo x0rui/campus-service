@@ -55,6 +55,41 @@ public class TaskController {
         return Result.ok(taskService.getByType(taskType));
     }
 
+    // 附近优先：传当前经纬度，按到取件点的距离升序
+    @GetMapping("/nearby")
+    public Result<List<Task>> nearby(@RequestParam(required = false) Double lat,
+                                     @RequestParam(required = false) Double lng,
+                                     @RequestParam(required = false) String type,
+                                     @RequestParam(defaultValue = "0") int page) {
+        return Result.ok(taskService.getNearbyList(lat, lng, type, page));
+    }
+
+    // 经纬度 → 文字地址（地图选点后回填）
+    @GetMapping("/geocode")
+    public Result<String> geocode(@RequestParam double lat, @RequestParam double lng) {
+        return Result.ok(taskService.reverseGeocode(lat, lng));
+    }
+
+    // 接单者上报实时位置（存 Redis + WebSocket 推给发布者）
+    @PostMapping("/location/report")
+    public Result<?> reportLocation(HttpServletRequest request, @RequestBody java.util.Map<String, Object> body) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) return Result.fail(401, "请先登录");
+        Object taskId = body.get("taskId");
+        Object lat = body.get("lat");
+        Object lng = body.get("lng");
+        if (taskId == null || lat == null || lng == null) return Result.fail("缺少参数");
+        String err = taskService.reportLocation(Long.valueOf(taskId.toString()), userId,
+                Double.parseDouble(lat.toString()), Double.parseDouble(lng.toString()));
+        return err == null ? Result.ok() : Result.fail(err);
+    }
+
+    // 取最新位置（轮询兜底）
+    @GetMapping("/location/{taskId}")
+    public Result<String> getLocation(@PathVariable Long taskId) {
+        return Result.ok(taskService.getLocation(taskId));
+    }
+
     @GetMapping("/search")
     public Result<List<Task>> search(@RequestParam String keyword) {
         return Result.ok(taskService.search(keyword));
