@@ -42,7 +42,10 @@
     "pages/resource/demand-publish/demand-publish",
     "pages/resource/demand-match/demand-match",
     "pages/question/practice/practice",
-    "pages/question/wrong/wrong"
+    "pages/question/wrong/wrong",
+    "pages/order/pay/pay",
+    "pages/order/list/list",
+    "pages/goods/demand/demand"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FF7E67",

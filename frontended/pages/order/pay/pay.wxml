@@ -1,0 +1,39 @@
+<view class="container">
+  <view class="pay-amount">
+    <view class="text-sm text-muted">支付金额</view>
+    <view class="amount">¥{{amount}}</view>
+    <view class="text-xs text-muted">订单号 {{orderNo}}</view>
+  </view>
+
+  <view class="section-heading">选择支付方式</view>
+  <view class="card">
+    <view class="pay-row {{channel === 'wechat' ? 'pay-row-active' : ''}}"
+          data-channel="wechat" bindtap="pickChannel">
+      <view class="pay-dot" style="background:#09BB07">微</view>
+      <view class="flex-1">
+        <view class="text-base text-bold">微信支付</view>
+        <view class="text-xs text-muted">模拟渠道，不产生真实扣款</view>
+      </view>
+      <view class="pay-check">{{channel === 'wechat' ? '●' : '○'}}</view>
+    </view>
+    <view class="pay-row {{channel === 'alipay' ? 'pay-row-active' : ''}}"
+          data-channel="alipay" bindtap="pickChannel">
+      <view class="pay-dot" style="background:#1677FF">支</view>
+      <view class="flex-1">
+        <view class="text-base text-bold">支付宝</view>
+        <view class="text-xs text-muted">模拟渠道，不产生真实扣款</view>
+      </view>
+      <view class="pay-check">{{channel === 'alipay' ? '●' : '○'}}</view>
+    </view>
+  </view>
+
+  <view class="notice">
+    本系统为个人主体小程序，无法接入真实微信支付，此处按真实支付的三段式结构
+    （下单 → 付款 → 服务端回调确认）实现，仅将第三方支付服务替换为系统内的模拟服务。
+  </view>
+
+  <view class="btn-primary" bindtap="pay" style="margin-top:24rpx">
+    {{paid ? '已支付' : (paying ? '支付中...' : '确认支付')}}
+  </view>
+  <view class="link-tap" bindtap="cancel" style="width:100%;color:var(--text-muted)">取消订单</view>
+</view>

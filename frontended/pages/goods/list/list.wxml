@@ -6,6 +6,14 @@
     <text class="text-sm text-primary" bindtap="onSearch" style="flex-shrink:0;margin-left:12rpx">搜索</text>
   </view>
 
+  <view class="flex-row flex-between" style="margin-bottom:8rpx">
+    <view class="flex-row">
+      <view class="link-tap" bindtap="goDemand">求购</view>
+      <view class="link-tap" bindtap="goOrders">我的订单</view>
+    </view>
+    <view class="link-tap" bindtap="goMyGoods">我发布的</view>
+  </view>
+
   <scroll-view class="category-scroll" scroll-x>
     <view class="category-tag {{activeCategory === item || (!activeCategory && item === '全部') ? 'category-active' : ''}}"
           wx:for="{{categories}}" wx:key="*this"

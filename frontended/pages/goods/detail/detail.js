@@ -82,6 +82,18 @@ Page({
     });
   },
 
+  // 立即购买：先下单拿订单号，再进自绘支付页
+  async buyNow() {
+    if (!app.checkLogin()) return;
+    try {
+      const res = await api.post('/api/pay/unified-order', { goodsId: this.data.goods.goodsId });
+      wx.navigateTo({
+        url: '/pages/order/pay/pay?orderId=' + res.order.orderId +
+             '&orderNo=' + res.order.orderNo + '&amount=' + res.order.amount
+      });
+    } catch (e) {}
+  },
+
   async markAsSold() {
     const goods = this.data.goods;
     const res = await new Promise(r => {

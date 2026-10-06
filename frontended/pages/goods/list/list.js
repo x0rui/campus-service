@@ -120,5 +120,17 @@ Page({
   goToPublish() {
     if (!app.checkLogin()) return;
     wx.navigateTo({ url: '/pages/goods/publish/publish' });
+  },
+
+  goDemand() {
+    wx.navigateTo({ url: '/pages/goods/demand/demand' });
+  },
+  goOrders() {
+    if (!app.checkLogin()) return;
+    wx.navigateTo({ url: '/pages/order/list/list' });
+  },
+  goMyGoods() {
+    if (!app.checkLogin()) return;
+    wx.navigateTo({ url: '/pages/user/my-goods/my-goods' });
   }
 });

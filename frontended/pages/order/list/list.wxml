@@ -1,0 +1,42 @@
+<view class="container">
+  <view class="tab-bar" style="margin-bottom:20rpx">
+    <view class="tab-item {{tab === 0 ? 'tab-active' : ''}}" data-tab="0" bindtap="switchTab">我买到的</view>
+    <view class="tab-item {{tab === 1 ? 'tab-active' : ''}}" data-tab="1" bindtap="switchTab">我卖出的</view>
+  </view>
+
+  <view class="card" wx:for="{{list}}" wx:key="orderId">
+    <view class="card-body">
+      <view class="flex-row flex-between mb-5">
+        <view class="text-xs text-muted">{{item.orderNo}}</view>
+        <view class="tag {{item.statusClass}} text-xs">{{item.statusText}}</view>
+      </view>
+
+      <view class="flex-row" data-id="{{item.goodsId}}" bindtap="goGoods">
+        <image wx:if="{{item.goodsImage}}" src="{{item.goodsImage}}" mode="aspectFill"
+               style="width:120rpx;height:120rpx;border-radius:16rpx;margin-right:20rpx" />
+        <view class="flex-1">
+          <view class="text-base text-bold text-ellipsis">{{item.goodsTitle || '闲置物品'}}</view>
+          <view class="text-primary text-bold mt-10">¥{{item.amount}}</view>
+        </view>
+      </view>
+
+      <view class="flex-row mt-15" style="gap:16rpx;justify-content:flex-end">
+        <block wx:if="{{item.status === 0}}">
+          <view class="btn-ghost" data-order="{{item}}" bindtap="pay">去支付</view>
+          <view class="btn-ghost" data-id="{{item.orderId}}" bindtap="cancel">取消</view>
+        </block>
+        <view wx:if="{{item.status === 1 && item.sellerId === myId}}"
+              class="btn-primary" style="width:auto" data-id="{{item.orderId}}" bindtap="ship">发货</view>
+        <view wx:if="{{item.status === 2 && item.buyerId === myId}}"
+              class="btn-primary" style="width:auto" data-id="{{item.orderId}}" bindtap="confirm">确认收货</view>
+        <view wx:if="{{item.status === 3}}" class="text-xs text-muted">交易已完成</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty-state">
+    <text class="empty-icon">🧾</text>
+    <text>还没有订单</text>
+  </view>
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+</view>

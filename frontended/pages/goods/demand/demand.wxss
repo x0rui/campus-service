@@ -1,0 +1,6 @@
+.match-heading {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin: 8rpx 0 12rpx 8rpx;
+}

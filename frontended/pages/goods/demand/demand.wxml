@@ -1,0 +1,88 @@
+<view class="container">
+  <view class="tab-bar" style="margin-bottom:20rpx">
+    <view class="tab-item {{tab === 0 ? 'tab-active' : ''}}" data-tab="0" bindtap="switchTab">求购广场</view>
+    <view class="tab-item {{tab === 1 ? 'tab-active' : ''}}" data-tab="1" bindtap="switchTab">我发布的</view>
+  </view>
+
+  <view class="btn-ghost" style="width:100%;margin-bottom:20rpx" bindtap="toggleForm">
+    {{showForm ? '收起发布表单' : '+ 发布求购'}}
+  </view>
+
+  <!-- 发布表单 -->
+  <view class="card" wx:if="{{showForm}}">
+    <view class="card-body">
+      <view class="form-group">
+        <view class="form-label">求购标题</view>
+        <input class="form-input" placeholder="如：求购二手自行车" data-key="title"
+               value="{{form.title}}" bindinput="onInput" maxlength="60" />
+      </view>
+      <view class="form-group">
+        <view class="form-label">期望分类</view>
+        <picker mode="selector" range="{{categories}}" value="{{catIndex}}" bindchange="onCatChange">
+          <view class="form-input">{{categories[catIndex]}} ▾</view>
+        </picker>
+      </view>
+      <view class="form-group">
+        <view class="form-label">关键词（选填）</view>
+        <input class="form-input" placeholder="如：自行车、山地车" data-key="keyword"
+               value="{{form.keyword}}" bindinput="onInput" maxlength="30" />
+      </view>
+      <view class="form-group">
+        <view class="form-label">可接受最高价（选填）</view>
+        <input class="form-input" type="digit" placeholder="如：200" data-key="maxPrice"
+               value="{{form.maxPrice}}" bindinput="onInput" />
+      </view>
+      <view class="form-group">
+        <view class="form-label">补充说明（选填）</view>
+        <textarea class="form-textarea" placeholder="新旧程度、品牌等" data-key="description"
+                  value="{{form.description}}" bindinput="onInput" maxlength="300" />
+      </view>
+      <view class="btn-primary" bindtap="submit">{{submitting ? '发布中...' : '发布求购'}}</view>
+    </view>
+  </view>
+
+  <!-- 求购列表 -->
+  <block wx:for="{{list}}" wx:key="demandId">
+    <view class="card">
+      <view class="card-body" data-id="{{item.demandId}}" bindtap="toggleMatch">
+        <view class="text-base text-bold">{{item.title}}</view>
+        <view class="flex-row mt-10" style="flex-wrap:wrap">
+          <view class="tag tag-primary text-xs" style="margin-right:10rpx" wx:if="{{item.category}}">{{item.category}}</view>
+          <view class="tag tag-warning text-xs" wx:if="{{item.maxPrice}}">≤ ¥{{item.maxPrice}}</view>
+        </view>
+        <view class="text-xs text-muted mt-10">
+          匹配到 {{item.matchCount}} 件在售物品
+          <text wx:if="{{item.status === 1}}" class="text-success"> · 已找到</text>
+          <text wx:if="{{item.status === 2}}" class="text-muted"> · 已关闭</text>
+        </view>
+      </view>
+      <view class="flex-row" style="padding:0 28rpx 24rpx;justify-content:flex-end" wx:if="{{tab === 1 && item.status === 0}}">
+        <view class="btn-ghost" data-id="{{item.demandId}}" catchtap="close">关闭求购</view>
+      </view>
+    </view>
+
+    <!-- 匹配结果 -->
+    <block wx:if="{{matchId === item.demandId}}">
+      <view class="match-heading">匹配到的在售物品（{{matchList.length}}）</view>
+      <view class="card" wx:for="{{matchList}}" wx:for-item="g" wx:key="goodsId"
+            style="margin-bottom:12rpx" data-id="{{g.goodsId}}" bindtap="goGoods">
+        <view class="card-body flex-row flex-between">
+          <view class="flex-1">
+            <view class="text-base text-bold text-ellipsis">{{g.title}}</view>
+            <view class="text-xs text-muted mt-5">{{g.category}}</view>
+          </view>
+          <view class="text-primary text-bold">¥{{g.price}}</view>
+        </view>
+      </view>
+      <view wx:if="{{matchList.length === 0}}" class="text-sm text-muted text-center" style="padding:20rpx 0">
+        暂时没有匹配到的在售物品
+      </view>
+    </block>
+  </block>
+
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty-state">
+    <text class="empty-icon">🔎</text>
+    <text>{{tab === 0 ? '还没有求购信息' : '你还没有发布过求购'}}</text>
+  </view>
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+</view>
