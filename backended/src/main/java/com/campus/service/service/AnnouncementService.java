@@ -1,12 +1,21 @@
 package com.campus.service.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.campus.service.entity.Announcement;
+import com.campus.service.entity.ClubApplication;
+import com.campus.service.entity.ClubMember;
+import com.campus.service.entity.User;
 import com.campus.service.mapper.AnnouncementMapper;
+import com.campus.service.mapper.ClubApplicationMapper;
+import com.campus.service.mapper.ClubMemberMapper;
 import com.campus.service.mapper.CommentMapper;
 import com.campus.service.mapper.CommentLikeMapper;
 import com.campus.service.mapper.PostLikeMapper;
+import com.campus.service.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,14 +26,24 @@ public class AnnouncementService {
     private final CommentMapper commentMapper;
     private final CommentLikeMapper commentLikeMapper;
     private final PostLikeMapper postLikeMapper;
+    private final ClubApplicationMapper clubApplicationMapper;
+    private final ClubMemberMapper clubMemberMapper;
+    private final UserMapper userMapper;
+    private final NotificationService notificationService;
 
     public AnnouncementService(AnnouncementMapper announcementMapper, CommunityService communityService,
-                               CommentMapper commentMapper, CommentLikeMapper commentLikeMapper, PostLikeMapper postLikeMapper) {
+                               CommentMapper commentMapper, CommentLikeMapper commentLikeMapper, PostLikeMapper postLikeMapper,
+                               ClubApplicationMapper clubApplicationMapper, ClubMemberMapper clubMemberMapper,
+                               UserMapper userMapper, NotificationService notificationService) {
         this.announcementMapper = announcementMapper;
         this.communityService = communityService;
         this.commentMapper = commentMapper;
         this.commentLikeMapper = commentLikeMapper;
         this.postLikeMapper = postLikeMapper;
+        this.clubApplicationMapper = clubApplicationMapper;
+        this.clubMemberMapper = clubMemberMapper;
+        this.userMapper = userMapper;
+        this.notificationService = notificationService;
     }
 
     public Announcement create(Announcement a) {
@@ -33,8 +52,53 @@ public class AnnouncementService {
         a.setLikeCount(0);
         a.setCommentCount(0);
         a.setPinned(0);
+        if (a.getTags() == null) a.setTags("");
         announcementMapper.insert(a);
+
+        // 社团公告不进公共信息流，定向推送给本社团成员，减少无关打扰
+        if (a.getType() == 1 && a.getClubName() != null && !a.getClubName().trim().isEmpty()) {
+            pushToClubMembers(a);
+        }
         return a;
+    }
+
+    private void pushToClubMembers(Announcement a) {
+        ClubApplication club = clubApplicationMapper.selectOne(new LambdaQueryWrapper<ClubApplication>()
+                .eq(ClubApplication::getClubName, a.getClubName())
+                .eq(ClubApplication::getStatus, 1)
+                .last("LIMIT 1"));
+        if (club == null) return;
+        List<ClubMember> members = clubMemberMapper.selectList(new LambdaQueryWrapper<ClubMember>()
+                .eq(ClubMember::getClubId, club.getAppId())
+                .eq(ClubMember::getStatus, 1));
+        for (ClubMember m : members) {
+            if (m.getUserId() == null || m.getUserId().equals(a.getUserId())) continue;
+            notificationService.send(m.getUserId(), 3, "社团公告",
+                    a.getClubName() + "：" + a.getTitle(), a.getId());
+        }
+    }
+
+    // 按帖子标签 + 发帖人兴趣标签，把帖子推给可能感兴趣的同学
+    public List<Announcement> recommend(Long userId) {
+        User u = userMapper.selectById(userId);
+        if (u == null || u.getHobbies() == null) return new ArrayList<>();
+        List<String> hobbies = new ArrayList<>();
+        for (String h : u.getHobbies().split("[,，、\\s]+")) {
+            if (h != null && !h.trim().isEmpty()) hobbies.add(h.trim());
+        }
+        if (hobbies.isEmpty()) return new ArrayList<>();
+
+        QueryWrapper<Announcement> w = new QueryWrapper<>();
+        w.eq("status", 0);
+        w.and(q -> {
+            boolean[] first = {true};
+            for (String h : hobbies) {
+                if (first[0]) { q.like("tags", h); first[0] = false; }
+                else q.or().like("tags", h);
+            }
+        });
+        w.orderByDesc("create_time").last("LIMIT 20");
+        return announcementMapper.selectList(w);
     }
 
     public List<Announcement> getLatest() {

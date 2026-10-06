@@ -5,6 +5,12 @@
       <input class="form-input" placeholder="如：篮球社、摄影社" value="{{clubName}}" bindinput="onNameInput" />
     </view>
     <view class="form-group">
+      <view class="form-label">社团分类</view>
+      <picker mode="selector" range="{{categories}}" value="{{catIndex}}" bindchange="onCatChange">
+        <view class="form-input">{{categories[catIndex]}} ▾</view>
+      </picker>
+    </view>
+    <view class="form-group">
       <view class="form-label">简介</view>
       <textarea class="form-textarea" placeholder="简单介绍一下你的社团..." value="{{description}}" bindinput="onDescInput" />
     </view>

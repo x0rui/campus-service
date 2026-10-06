@@ -19,6 +19,8 @@ public class Announcement implements Serializable {
     private String content;
     private String image;
     private String location;
+    // 标签，逗号分隔（讲座/竞赛/学术活动/求助等），用于按兴趣推荐
+    private String tags;
     private String eventTime;
     private Integer status;
     private Integer type;

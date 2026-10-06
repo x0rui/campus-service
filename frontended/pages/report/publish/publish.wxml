@@ -10,6 +10,7 @@
         <text wx:elif="{{targetType==='post'}}">闲聊帖子</text>
         <text wx:elif="{{targetType==='announcement'}}">公告</text>
         <text wx:elif="{{targetType==='user'}}">用户</text>
+        <text wx:elif="{{targetType==='resource'}}">学习资料</text>
         <text wx:else>{{targetType}}</text>
         ：<text class="text-bold">{{targetTitle}}</text>
       </view>

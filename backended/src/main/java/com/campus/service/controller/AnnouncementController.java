@@ -64,6 +64,14 @@ public class AnnouncementController {
         return Result.ok(announcementService.getLatest());
     }
 
+    // 按兴趣标签推荐的帖子（未登录或没填兴趣则返回空）
+    @GetMapping("/recommend")
+    public Result<List<Announcement>> recommend(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) return Result.ok(new java.util.ArrayList<Announcement>());
+        return Result.ok(announcementService.recommend(userId));
+    }
+
     @GetMapping("/detail/{id}")
     public Result<Announcement> detail(@PathVariable Long id) {
         return Result.ok(announcementService.getDetail(id));

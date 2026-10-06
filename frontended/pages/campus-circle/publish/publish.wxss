@@ -1,1 +1,17 @@
 /* 校园圈发布页 */
+.type-chip {
+  min-height: 76rpx;
+  padding: 0 32rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40rpx;
+  background: #F0F0F3;
+  color: var(--text-secondary);
+  font-size: 26rpx;
+}
+.type-chip-on {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}

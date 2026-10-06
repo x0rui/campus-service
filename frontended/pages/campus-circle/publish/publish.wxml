@@ -2,9 +2,10 @@
   <view class="card">
     <view class="form-group">
       <view class="form-label">类型</view>
-      <view class="flex-row" style="gap:12rpx">
-        <view style="padding:10rpx 28rpx;border-radius:20rpx;background:{{type===0?'var(--primary)':'#F0F0F3'}};color:{{type===0?'#fff':'#999'}};font-size:26rpx" bindtap="setType" data-type="0">闲聊</view>
-        <view style="padding:10rpx 28rpx;border-radius:20rpx;background:{{type===1?'var(--primary)':'#F0F0F3'}};color:{{type===1?'#fff':'#999'}};font-size:26rpx" bindtap="setType" data-type="1">公告</view>
+      <view class="flex-row" style="gap:12rpx;flex-wrap:wrap">
+        <view class="type-chip {{type===0?'type-chip-on':''}}" bindtap="setType" data-type="0">闲聊</view>
+        <view class="type-chip {{type===1?'type-chip-on':''}}" bindtap="setType" data-type="1">公告</view>
+        <view class="type-chip {{type===2?'type-chip-on':''}}" bindtap="setType" data-type="2">求助</view>
       </view>
     </view>
     <view class="form-group">
@@ -15,12 +16,24 @@
       <view class="form-label">标题</view>
       <input class="form-input" placeholder="标题" value="{{title}}" bindinput="onTitleInput"/>
     </view>
+
+    <view class="form-group">
+      <view class="form-label">标签（用于推荐给感兴趣的同学）</view>
+      <view class="flex-row" style="gap:12rpx;flex-wrap:wrap;margin-bottom:12rpx">
+        <view wx:for="{{tagOptions}}" wx:key="*this"
+              class="type-chip {{tags.indexOf(item) >= 0 ? 'type-chip-on' : ''}}"
+              data-tag="{{item}}" bindtap="addTag">{{item}}</view>
+      </view>
+      <input class="form-input" placeholder="也可自己写，多个用英文逗号分隔"
+             value="{{tags}}" bindinput="onTagsInput"/>
+    </view>
+
     <view class="form-group">
       <view class="form-label">内容</view>
       <textarea class="form-textarea" placeholder="写点什么..." value="{{content}}" bindinput="onContentInput" auto-height maxlength="5000"/>
     </view>
     <view class="flex-row" style="gap:12rpx">
-      <view class="btn-small" style="background:#FFF0EC;color:#E86A55;width:auto" bindtap="designPoster">生成海报</view>
+      <view class="btn-ghost" bindtap="designPoster">生成海报</view>
     </view>
     <view wx:if="{{posterUrl}}" class="flex-row mt-5" style="gap:8rpx">
       <image src="{{posterUrl}}" mode="aspectFill" style="width:120rpx;height:80rpx;border-radius:var(--radius-sm)" />

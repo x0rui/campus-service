@@ -8,8 +8,16 @@ Page({
     this.setData({ loading: true });
     try {
       var page = reset ? 0 : this.data.page;
-      var list = await api.get('/api/announcement/list', { type: type, page: page });
+      // type=2 是"推荐"页：按我的兴趣标签匹配帖子
+      var list = (type === 2)
+        ? await api.get('/api/announcement/recommend')
+        : await api.get('/api/announcement/list', { type: type, page: page });
       list = list || [];
+      // 标签是逗号分隔的字符串，拆成数组方便 wxml 渲染
+      list = list.map(function (p) {
+        p.tagList = (p.tags || '').split(',').filter(function (x) { return x && x.trim(); });
+        return p;
+      });
       if (reset) {
         this.setData({ list: list, page: 0, hasMore: list.length >= 10 });
       } else {

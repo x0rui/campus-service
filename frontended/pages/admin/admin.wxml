@@ -163,7 +163,7 @@
         <view class="flex-row flex-between mb-5">
           <view class="flex-row" style="gap:8rpx">
             <view class="tag {{item.status===0?'tag-warning':item.status===1?'tag-danger':'tag-muted'}}">{{item.status===0?'待处理':item.status===1?'已确认违规':'已驳回'}}</view>
-            <view class="tag tag-primary">{{item.targetType==='goods'?'闲置':item.targetType==='task'?'跑腿':item.targetType==='team'?'组局':item.targetType==='club'?'社团':item.targetType==='post'?'闲聊':item.targetType==='user'?'用户':'公告'}}</view>
+            <view class="tag tag-primary">{{item.targetType==='goods'?'闲置':item.targetType==='task'?'跑腿':item.targetType==='team'?'组局':item.targetType==='club'?'社团':item.targetType==='post'?'闲聊':item.targetType==='user'?'用户':item.targetType==='resource'?'学习资料':'公告'}}</view>
           </view>
           <text class="text-xs text-muted">{{item.createTime}}</text>
         </view>

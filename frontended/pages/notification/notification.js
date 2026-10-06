@@ -41,6 +41,12 @@ Page({
           wx.navigateTo({ url: '/pages/club/detail/detail?id=' + relatedId });
         } else if (type === 4) {
           wx.navigateTo({ url: '/pages/goods/detail/detail?id=' + relatedId });
+        } else if (type === 6) {
+          // 学习资源：relatedId 是求资源需求的 ID，跳到匹配结果页
+          wx.navigateTo({ url: '/pages/resource/demand-match/demand-match?id=' + relatedId });
+        } else if (type === 7) {
+          // 支付相关通知：跳到我的订单
+          wx.navigateTo({ url: '/pages/order/list/list' });
         }
       }
     } catch (e) {}

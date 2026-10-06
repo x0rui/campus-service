@@ -14,6 +14,8 @@ public class ClubApplication {
     private Long userId;
     private String clubName;
     private String description;
+    // 社团分类：学术/文艺/体育/公益/其他（支持学术类社团）
+    private String category;
     private Integer status;
     private String reason;
     private LocalDateTime createTime;
