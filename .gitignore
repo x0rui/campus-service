@@ -19,6 +19,7 @@ backended/target/
 *.csv
 *.doc
 *.zip
+*.pptx
 阿里/
 Redis-x64-5.0.14.1/
 .claude/
@@ -27,6 +28,10 @@ Redis-x64-5.0.14.1/
 课程设计文档/
 课程设计文档模板/
 课程设计的图/
+任务书/
+
+# 提交材料副本（含 campus_service.sql，里面有真实用户 openid，绝不能提交）
+提交材料/
 
 # === OS ===
 .DS_Store
