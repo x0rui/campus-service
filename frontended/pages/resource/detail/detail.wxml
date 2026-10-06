@@ -20,15 +20,17 @@
     <view class="card-body text-body">{{r.description}}</view>
   </view>
 
-  <view class="bottom-bar flex-row">
-    <view class="btn-outline flex-1 text-center" bindtap="collect">
+  <view class="bottom-bar">
+    <view class="btn-outline flex-1" bindtap="collect">
       {{collected ? '★ 已收藏' : '☆ 收藏'}}
     </view>
-    <view class="btn-outline flex-1 text-center" bindtap="evaluate" style="margin:0 16rpx">评价</view>
-    <view class="btn-primary flex-1 text-center" bindtap="download">下载</view>
+    <view class="btn-outline flex-1" bindtap="evaluate">评价</view>
+    <view class="btn-primary flex-1" bindtap="download">下载</view>
   </view>
 
-  <view class="text-xs text-muted text-center mt-5" bindtap="report">举报该资料</view>
+  <view class="flex-center" style="padding-bottom:40rpx">
+    <view class="link-tap text-muted" bindtap="report">举报该资料</view>
+  </view>
 </view>
 
 <view wx:elif="{{!loading}}" class="empty-state">

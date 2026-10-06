@@ -1,12 +1,14 @@
 .option {
   display: flex;
   align-items: center;
+  min-height: 96rpx;
   padding: 20rpx;
   margin-top: 16rpx;
-  border: 2rpx solid #eee;
+  border: 2rpx solid var(--border);
   border-radius: 12rpx;
   font-size: 28rpx;
 }
+.option:active { background: var(--primary-light); }
 .option-active {
   border-color: #FF7E67;
   background: #FFF6F4;
@@ -25,11 +27,4 @@
 .option-active .option-key {
   background: #FF7E67;
   color: #fff;
-}
-.btn-outline {
-  padding: 20rpx 0;
-  border: 2rpx solid #FF7E67;
-  color: #FF7E67;
-  border-radius: 12rpx;
-  font-size: 28rpx;
 }

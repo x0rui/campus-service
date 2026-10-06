@@ -1,9 +1,2 @@
-.bottom-bar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 16rpx 24rpx;
-  background: #fff;
-  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.06);
-}
+/* 底部操作栏用 app.wxss 的 .bottom-bar（固定定位），这里只给内容留出避让空间 */
+.container { padding-bottom: 160rpx; }

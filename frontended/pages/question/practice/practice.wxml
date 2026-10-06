@@ -1,16 +1,16 @@
 <view class="container">
-  <view class="flex-row flex-between" style="margin-bottom:16rpx">
+  <view class="flex-row flex-between" style="margin-bottom:8rpx">
     <picker mode="selector" range="{{subjects}}" value="{{subjectIndex}}" bindchange="onSubjectChange">
-      <view class="tag tag-primary" style="padding:8rpx 20rpx">{{subjects[subjectIndex]}} ▾</view>
+      <view class="picker-pill">{{subjects[subjectIndex]}} ▾</view>
     </picker>
-    <text class="text-sm text-primary" bindtap="goWrong">错题本 →</text>
+    <view class="link-tap" bindtap="goWrong">错题本</view>
   </view>
 
   <view class="search-bar" style="margin-bottom:16rpx">
     <text class="search-icon">◯</text>
     <input class="search-input" placeholder="按章节/知识点筛选，如：树" value="{{chapter}}"
            bindinput="onChapterInput" bindconfirm="onSearch" />
-    <text class="text-sm text-primary" bindtap="onSearch" style="flex-shrink:0;margin-left:12rpx">筛选</text>
+    <view class="link-tap" bindtap="onSearch" style="flex-shrink:0">筛选</view>
   </view>
 
   <block wx:if="{{current}}">

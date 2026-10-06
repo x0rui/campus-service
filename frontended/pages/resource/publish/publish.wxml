@@ -28,8 +28,8 @@
       <view class="form-group">
         <view class="form-label">上传文件</view>
         <view class="flex-row">
-          <view class="btn-outline" style="margin-right:16rpx" bindtap="chooseFile">选文件</view>
-          <view class="btn-outline" bindtap="chooseImage">选图片</view>
+          <view class="btn-ghost" style="margin-right:16rpx" bindtap="chooseFile">选文件</view>
+          <view class="btn-ghost" bindtap="chooseImage">选图片</view>
         </view>
         <view class="text-sm mt-5" wx:if="{{fileName}}">已选：{{fileName}}</view>
         <view class="text-sm text-muted mt-5" wx:elif="{{uploading}}">上传中...</view>

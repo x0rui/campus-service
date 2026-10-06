@@ -37,7 +37,7 @@
           <view class="text-xs text-muted">{{item.college}} {{item.major}}</view>
         </view>
       </view>
-      <view class="btn-outline btn-small" data-id="{{item.userId}}" catchtap="contact">私信</view>
+      <view class="btn-ghost" data-id="{{item.userId}}" catchtap="contact">私信</view>
     </view>
   </view>
   <view wx:if="{{users.length === 0}}" class="text-sm text-muted text-center" style="padding:20rpx 0">

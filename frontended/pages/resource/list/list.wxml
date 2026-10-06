@@ -3,18 +3,16 @@
     <text class="search-icon">◯</text>
     <input class="search-input" placeholder="搜索课程、资料标题..." value="{{keyword}}"
            bindinput="onKeywordInput" bindconfirm="onSearch" />
-    <text class="text-sm text-primary" bindtap="onSearch" style="flex-shrink:0;margin-left:12rpx">搜索</text>
+    <view class="link-tap" bindtap="onSearch" style="flex-shrink:0">搜索</view>
   </view>
 
-  <view class="flex-row flex-between" style="margin-bottom:12rpx">
+  <view class="flex-row flex-between" style="margin-bottom:8rpx">
     <picker mode="selector" range="{{courses}}" value="{{courseIndex}}" bindchange="onCourseChange">
-      <view class="tag tag-primary" style="padding:8rpx 20rpx">
-        {{courses[courseIndex]}} ▾
-      </view>
+      <view class="picker-pill">{{courses[courseIndex]}} ▾</view>
     </picker>
     <view class="flex-row">
-      <text class="text-sm text-muted" bindtap="goMy" style="margin-right:24rpx">我的</text>
-      <text class="text-sm text-primary" bindtap="goDemand">求资源 →</text>
+      <view class="link-tap" bindtap="goMy">我的</view>
+      <view class="link-tap" bindtap="goDemand">求资源</view>
     </view>
   </view>
 
@@ -25,14 +23,14 @@
   </scroll-view>
 
   <view class="card" wx:for="{{list}}" wx:key="resourceId"
-        data-id="{{item.resourceId}}" bindtap="goDetail" style="margin-bottom:16rpx">
+        data-id="{{item.resourceId}}" bindtap="goDetail">
     <view class="card-body">
-      <view class="text-base text-bold text-ellipsis">📄 {{item.title}}</view>
-      <view class="flex-row mt-5" style="flex-wrap:wrap">
+      <view class="text-bold text-ellipsis" style="font-size:30rpx">{{item.title}}</view>
+      <view class="flex-row mt-10" style="flex-wrap:wrap">
         <view class="tag tag-primary text-xs" style="margin-right:10rpx">{{item.course}}</view>
         <view class="tag tag-muted text-xs">{{item.resourceType}}</view>
       </view>
-      <view class="text-xs text-muted mt-5">
+      <view class="text-xs text-muted mt-10">
         下载 {{item.downloadCount}} · 收藏 {{item.collectCount}} · 浏览 {{item.viewCount}}
       </view>
     </view>

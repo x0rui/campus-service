@@ -16,15 +16,19 @@ page {
   --accent-light: #FFFAF0;
   --bg: #FFF8F0;
   --card-bg: #FFFFFF;
-  --text: #2D3436;
-  --text-secondary: #636E72;
-  --text-muted: #B2BEC3;
-  --border: #F0E8E0;
-  --radius-sm: 10rpx;
+  --text: #26292B;
+  --text-secondary: #5A6469;
+  /* 原 #B2BEC3 在白底仅 1.9:1 对比，小字几乎看不见；降到 4.8:1 过 WCAG AA */
+  --text-muted: #6B7378;
+  --danger: #C94A4A;
+  --danger-light: #FCECEC;
+  --border: #EDE6DE;
+  --radius-sm: 12rpx;
   --radius-md: 16rpx;
   --radius-lg: 24rpx;
-  --shadow-sm: 0 2rpx 8rpx rgba(0,0,0,0.04);
-  --shadow-md: 0 4rpx 20rpx rgba(0,0,0,0.05);
+  /* 阴影统一用主色暗调的 RGB(232,106,85)，不再硬编码 */
+  --shadow-sm: 0 2rpx 8rpx rgba(232,106,85,0.06);
+  --shadow-md: 0 6rpx 20rpx rgba(232,106,85,0.08);
 }
 
 page {
@@ -57,7 +61,8 @@ page {
 
 /* 品牌头部 */
 .brand-header {
-  background: linear-gradient(135deg, #D45A48, #2A9D8F);
+  /* 原来红直接跳青，像随机配色；改成同一暖橙家族内的渐变 */
+  background: linear-gradient(135deg, #FF9B85, #E8604A);
   border-radius: 0 0 40rpx 40rpx;
   padding: 40rpx 28rpx 32rpx;
   color: #fff;
@@ -77,39 +82,97 @@ page {
 }
 
 /* ----- 按钮 ----- */
+/* 触控尺寸规则：主按钮 96rpx、次按钮 88rpx、小按钮 88rpx、筛选片 76rpx。
+   微信建议最小点击区 88rpx（44px），原来的小按钮只有约 48rpx，普遍点不中。 */
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
   border: none;
   border-radius: var(--radius-md);
-  padding: 26rpx;
+  min-height: 96rpx;
+  padding: 0 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   font-size: 30rpx;
   font-weight: 600;
   width: 100%;
   box-sizing: border-box;
-  letter-spacing: 2rpx;
+  letter-spacing: 1rpx;
+  transition: transform .12s ease, opacity .12s ease;
 }
-.btn-primary:active { opacity: 0.88; }
+.btn-primary:active { transform: scale(0.98); opacity: .9; }
 
 .btn-outline {
   border: 2rpx solid var(--primary);
   color: var(--primary);
   background: #fff;
   border-radius: var(--radius-md);
-  padding: 24rpx 32rpx;
+  min-height: 88rpx;
+  padding: 0 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   font-size: 28rpx;
   font-weight: 500;
   width: 100%;
+  box-sizing: border-box;
+  transition: transform .12s ease, background .12s ease;
 }
-.btn-outline:active { background: var(--primary-light); }
+.btn-outline:active { transform: scale(0.98); background: var(--primary-light); }
 
 .btn-small {
-  padding: 12rpx 24rpx;
-  font-size: 24rpx;
+  min-height: 88rpx;
+  padding: 0 28rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
   border-radius: var(--radius-sm);
   line-height: 1;
+}
+
+/* 用作按钮的文字链接（"搜索""求资源 →"这类），给足点击区 */
+.link-tap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 88rpx;
+  padding: 0 20rpx;
+  font-size: 26rpx;
+  color: var(--primary);
+}
+
+/* 并排使用的描边按钮（宽度自适应，避免两个 width:100% 的按钮把一行挤爆） */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 88rpx;
+  padding: 0 36rpx;
+  border: 2rpx solid var(--primary);
+  border-radius: var(--radius-md);
+  color: var(--primary);
+  background: #fff;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+.btn-ghost:active { background: var(--primary-light); }
+
+/* 下拉选择器的触发块（课程、类型筛选） */
+.picker-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 76rpx;
+  padding: 0 28rpx;
+  border-radius: 40rpx;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-size: 26rpx;
+  font-weight: 500;
 }
 
 .float-btn {
@@ -169,7 +232,7 @@ page {
 .tag-primary { background: var(--primary-light); color: var(--primary-dark); }
 .tag-success { background: var(--secondary-light); color: var(--secondary); }
 .tag-warning { background: var(--accent-light); color: #C17A1A; }
-.tag-danger { background: #FFF0EC; color: var(--primary-dark); }
+.tag-danger { background: var(--danger-light); color: var(--danger); }
 .tag-muted { background: #F0F0F5; color: var(--text-muted); }
 
 /* ----- Flex ----- */
@@ -200,7 +263,7 @@ page {
 .text-secondary { color: var(--secondary); }
 .text-tertiary { color: var(--tertiary); }
 .text-success { color: var(--secondary); }
-.text-danger { color: var(--primary-dark); }
+.text-danger { color: var(--danger); }
 .text-muted { color: var(--text-muted); }
 .text-body { color: var(--text-secondary); }
 .text-center { text-align: center; }
@@ -238,15 +301,16 @@ page {
 /* ----- 搜索栏 ----- */
 .search-bar {
   background: var(--card-bg);
-  border-radius: 50rpx;
-  padding: 22rpx 32rpx;
+  border-radius: 44rpx;
+  padding: 0 32rpx;
+  min-height: 88rpx;
   margin-bottom: 20rpx;
   box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
 }
 .search-bar .search-icon { font-size: 28rpx; color: var(--text-muted); margin-right: 12rpx; flex-shrink: 0; }
-.search-input { font-size: 26rpx; color: var(--text-muted); flex: 1; }
+.search-input { font-size: 28rpx; color: var(--text); flex: 1; min-height: 88rpx; }
 
 /* ----- Tab 标签栏 ----- */
 .tab-bar {
@@ -258,7 +322,10 @@ page {
 .tab-item {
   flex: 1;
   text-align: center;
-  padding: 14rpx 0;
+  min-height: 76rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 12rpx;
   font-size: 26rpx;
   color: var(--text-secondary);
@@ -294,9 +361,11 @@ page {
 /* ----- 分类标签（横向滚动） ----- */
 .category-scroll { white-space: nowrap; margin-bottom: 20rpx; padding: 10rpx 0; }
 .category-tag {
-  display: inline-block; padding: 12rpx 28rpx; margin-right: 16rpx;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 76rpx; padding: 0 32rpx; margin-right: 16rpx;
   background: var(--card-bg); border-radius: 40rpx; font-size: 26rpx;
-  color: var(--text-secondary); border: 2rpx solid transparent;
+  color: var(--text-secondary); border: 2rpx solid var(--border);
+  box-sizing: border-box;
 }
 .category-active {
   background: var(--primary-light); color: var(--primary);
