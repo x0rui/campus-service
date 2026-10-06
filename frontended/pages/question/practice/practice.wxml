@@ -1,0 +1,79 @@
+<view class="container">
+  <view class="flex-row flex-between" style="margin-bottom:16rpx">
+    <picker mode="selector" range="{{subjects}}" value="{{subjectIndex}}" bindchange="onSubjectChange">
+      <view class="tag tag-primary" style="padding:8rpx 20rpx">{{subjects[subjectIndex]}} ▾</view>
+    </picker>
+    <text class="text-sm text-primary" bindtap="goWrong">错题本 →</text>
+  </view>
+
+  <view class="search-bar" style="margin-bottom:16rpx">
+    <text class="search-icon">◯</text>
+    <input class="search-input" placeholder="按章节/知识点筛选，如：树" value="{{chapter}}"
+           bindinput="onChapterInput" bindconfirm="onSearch" />
+    <text class="text-sm text-primary" bindtap="onSearch" style="flex-shrink:0;margin-left:12rpx">筛选</text>
+  </view>
+
+  <block wx:if="{{current}}">
+    <view class="card">
+      <view class="card-body">
+        <view class="text-xs text-muted">
+          {{current.subject}} · {{current.chapter}} · 第 {{idx + 1}}/{{questions.length}} 题
+        </view>
+        <view class="text-base text-bold mt-10">{{current.content}}</view>
+
+        <!-- 选择题 -->
+        <block wx:if="{{current.qType === 0 || current.qType === 1}}">
+          <view wx:for="{{current.optList}}" wx:key="index" wx:for-index="i" wx:for-item="opt"
+                class="option {{userAnswer.indexOf(letters[i]) >= 0 ? 'option-active' : ''}}"
+                data-letter="{{letters[i]}}" bindtap="pickOption">
+            <view class="option-key">{{letters[i]}}</view>
+            <view class="flex-1">{{opt}}</view>
+          </view>
+          <view class="text-xs text-muted mt-5" wx:if="{{current.qType === 1}}">多选题，可选择多个选项</view>
+        </block>
+
+        <!-- 判断题 -->
+        <block wx:elif="{{current.qType === 2}}">
+          <view class="option {{userAnswer === '对' ? 'option-active' : ''}}" data-letter="对" bindtap="pickOption">
+            <view class="option-key">√</view><view class="flex-1">对</view>
+          </view>
+          <view class="option {{userAnswer === '错' ? 'option-active' : ''}}" data-letter="错" bindtap="pickOption">
+            <view class="option-key">×</view><view class="flex-1">错</view>
+          </view>
+        </block>
+
+        <!-- 填空 -->
+        <block wx:elif="{{current.qType === 3}}">
+          <input class="form-input mt-10" placeholder="填写答案" value="{{userAnswer}}" bindinput="onInputAnswer" />
+        </block>
+
+        <!-- 主观题 -->
+        <block wx:else>
+          <textarea class="form-textarea mt-10" placeholder="写下你的作答（主观题不判分，答完对照参考答案）"
+                    value="{{userAnswer}}" bindinput="onInputAnswer" maxlength="500" />
+        </block>
+      </view>
+    </view>
+
+    <view wx:if="{{submitted}}" class="card">
+      <view class="card-body">
+        <view wx:if="{{result.subjective}}" class="text-base text-bold">参考答案与解析</view>
+        <view wx:elif="{{result.isCorrect}}" class="text-base text-bold text-success">✔ 回答正确</view>
+        <view wx:else class="text-base text-bold text-danger">✘ 回答错误（已加入错题本）</view>
+        <view class="text-sm mt-5">参考答案：{{result.answer}}</view>
+        <view class="text-sm text-body mt-5" wx:if="{{result.analysis}}">解析：{{result.analysis}}</view>
+      </view>
+    </view>
+
+    <view class="flex-row" style="margin:24rpx 0;gap:16rpx">
+      <view class="btn-outline flex-1 text-center" bindtap="prev" wx:if="{{idx > 0}}">上一题</view>
+      <view class="btn-primary flex-1 text-center" wx:if="{{!submitted}}" bindtap="submit">提交作答</view>
+      <view class="btn-primary flex-1 text-center" wx:else bindtap="next">下一题</view>
+    </view>
+  </block>
+
+  <view wx:elif="{{!loading}}" class="empty-state">
+    <text class="empty-icon">📝</text>
+    <text>这个范围下还没有题目</text>
+  </view>
+</view>

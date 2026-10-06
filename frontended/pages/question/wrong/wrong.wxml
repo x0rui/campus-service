@@ -1,0 +1,42 @@
+<view class="container">
+  <view class="card" style="margin-bottom:16rpx" bindtap="toggleRecommend">
+    <view class="card-body flex-row flex-between">
+      <view>
+        <view class="text-base text-bold">按知识点推荐资料</view>
+        <view class="text-xs text-muted mt-5">根据错题的课程与章节，推荐平台里对应的学习资料</view>
+      </view>
+      <text class="text-primary">{{showRecommend ? '收起' : '展开'}} ›</text>
+    </view>
+  </view>
+
+  <block wx:if="{{showRecommend}}">
+    <view class="card" wx:for="{{recommend}}" wx:key="resourceId"
+          style="margin-bottom:12rpx" data-id="{{item.resourceId}}" bindtap="goResource">
+      <view class="card-body">
+        <view class="text-base text-bold text-ellipsis">📄 {{item.title}}</view>
+        <view class="text-xs text-muted mt-5">{{item.course}} · {{item.resourceType}}</view>
+      </view>
+    </view>
+    <view wx:if="{{recommend.length === 0}}" class="text-sm text-muted text-center" style="padding:20rpx 0">
+      还没有可推荐的资料，先去学习资源里上传一些吧
+    </view>
+  </block>
+
+  <view class="section-heading">我的错题（{{list.length}}）</view>
+  <view class="card" wx:for="{{list}}" wx:key="questionId" style="margin-bottom:12rpx">
+    <view class="card-body">
+      <view class="text-xs text-muted">{{item.subject}} · {{item.chapter}}</view>
+      <view class="text-base text-bold mt-5">{{item.content}}</view>
+    </view>
+    <view class="text-xs text-danger text-right" style="padding:0 24rpx 20rpx"
+          data-id="{{item.questionId}}" catchtap="remove">移出错题本</view>
+  </view>
+
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty-state">
+    <text class="empty-icon">✅</text>
+    <text>错题本是空的，去刷几道题吧</text>
+  </view>
+  <view wx:if="{{loading}}" class="load-more">加载中...</view>
+
+  <view class="btn-primary text-center" bindtap="goPractice" style="margin:24rpx 0">去刷题</view>
+</view>

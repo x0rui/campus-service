@@ -40,7 +40,9 @@
     "pages/resource/my/my",
     "pages/resource/demand-list/demand-list",
     "pages/resource/demand-publish/demand-publish",
-    "pages/resource/demand-match/demand-match"
+    "pages/resource/demand-match/demand-match",
+    "pages/question/practice/practice",
+    "pages/question/wrong/wrong"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FF7E67",
