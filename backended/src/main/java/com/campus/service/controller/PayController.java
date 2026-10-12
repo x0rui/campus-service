@@ -43,7 +43,7 @@ public class PayController {
         if (orderNo == null) return Result.fail("缺少订单号");
         String channel = body.get("channel") == null ? "" : body.get("channel").toString();
         boolean ok = payService.notifyPay(orderNo.toString(), channel);
-        return ok ? Result.ok() : Result.fail("订单不存在");
+        return ok ? Result.ok() : Result.fail(404, "订单不存在");
     }
 
     // 我的订单（买 + 卖）GET /order-list
@@ -58,7 +58,7 @@ public class PayController {
     @GetMapping("/order/{orderId}")
     public Result<Orders> detail(@PathVariable Long orderId) {
         Orders o = payService.detail(orderId);
-        return o == null ? Result.fail("订单不存在") : Result.ok(o);
+        return o == null ? Result.fail(404, "订单不存在") : Result.ok(o);
     }
 
     // 支付流水 GET /log/{orderId}

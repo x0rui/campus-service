@@ -100,7 +100,7 @@ public class TaskController {
         Long userId = (Long) request.getAttribute("userId");
         Task task = taskService.getDetail(taskId, userId);
         if (task == null) {
-            return Result.fail("任务不存在");
+            return Result.fail(404, "任务不存在");
         }
         return Result.ok(task);
     }

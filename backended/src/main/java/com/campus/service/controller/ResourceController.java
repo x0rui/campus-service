@@ -56,7 +56,7 @@ public class ResourceController {
     @GetMapping("/detail/{resourceId}")
     public Result<Resource> detail(@PathVariable Long resourceId) {
         Resource r = resourceService.getDetail(resourceId);
-        return r == null ? Result.fail("资料不存在") : Result.ok(r);
+        return r == null ? Result.fail(404, "资料不存在") : Result.ok(r);
     }
 
     // 5. 是否已收藏 GET /is-collect/{id}
@@ -120,7 +120,7 @@ public class ResourceController {
         Integer status = Integer.valueOf(statusObj.toString());
         if (status != 1 && status != 2) return Result.fail("审核状态只能是1通过或2拒绝");
         String reason = body.get("rejectReason") == null ? "" : body.get("rejectReason").toString();
-        return resourceService.audit(resourceId, status, reason) ? Result.ok() : Result.fail("资料不存在");
+        return resourceService.audit(resourceId, status, reason) ? Result.ok() : Result.fail(404, "资料不存在");
     }
 
     // 12. 后台列表 GET /admin/list?status=&page=

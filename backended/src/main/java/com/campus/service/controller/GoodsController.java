@@ -65,7 +65,7 @@ public class GoodsController {
         boolean skipView = "1".equals(poll);
         Goods goods = goodsService.getDetail(goodsId, userId, skipView);
         if (goods == null) {
-            return Result.fail("物品不存在");
+            return Result.fail(404, "物品不存在");
         }
         return Result.ok(goods);
     }
