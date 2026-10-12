@@ -51,6 +51,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Result<?> handleAll(Exception e) {
         log.error("未捕获异常: {}", e.getMessage(), e);
-        return Result.fail("服务器内部错误，请稍后重试");
+        return Result.fail(500, "服务器内部错误，请稍后重试");
     }
 }

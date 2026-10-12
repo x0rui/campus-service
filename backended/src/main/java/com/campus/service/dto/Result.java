@@ -22,8 +22,12 @@ public class Result<T> {
         return new Result<>(200, "success", null);
     }
 
+    /**
+     * 业务失败：默认按“客户端请求有问题”返回 400。
+     * 真正的服务端异常请用 fail(500, ...) —— 见 GlobalExceptionHandler.handleAll。
+     */
     public static <T> Result<T> fail(String message) {
-        return new Result<>(500, message, null);
+        return new Result<>(400, message, null);
     }
 
     public static <T> Result<T> fail(int code, String message) {
