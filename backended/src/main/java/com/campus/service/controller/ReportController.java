@@ -38,6 +38,7 @@ public class ReportController {
     @GetMapping("/my")
     public Result<List<Report>> my(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) return Result.fail(401, "请先登录");
         return Result.ok(reportService.getMy(userId));
     }
 
