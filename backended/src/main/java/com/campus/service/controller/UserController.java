@@ -40,10 +40,11 @@ public class UserController {
         if (code == null || code.isEmpty()) {
             return Result.fail("code不能为空");
         }
-        // 后端用 code 换 openid（真机走微信API，开发工具模拟器dev模式走hash降级）
+        // 后端用 code 换 openid（真机走微信API；开发工具模拟器由 dev-mode 决定是否用 hash 兜底）
         String openid = wechatService.getOpenId(code);
         if (openid == null) {
-            openid = "wx_" + Integer.toHexString(code.hashCode());
+            // 换不到 openid 就不能发 token，否则谁都能凭空造号
+            return Result.fail(401, "微信登录失败，请重试");
         }
         Map<String, Object> result = userService.login(openid, nickName, avatarUrl);
         if (result == null) {
