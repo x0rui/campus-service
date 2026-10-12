@@ -2,6 +2,7 @@ package com.campus.service.service;
 
 import com.campus.service.entity.User;
 import com.campus.service.mapper.UserMapper;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +18,9 @@ public class CreditService {
         this.taskService = taskService;
     }
 
+    // 这里直接用 mapper 更新信誉分，绕过了 UserService.updateUser，
+    // 必须手动失效 user:detail 缓存，否则 /api/user/simple/{id} 会一直返回旧分
+    @CacheEvict(cacheNames = "user:detail", key = "#userId")
     public int recalculate(Long userId) {
         User user = userMapper.selectById(userId);
         if (user == null) return 0;

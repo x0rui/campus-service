@@ -21,6 +21,8 @@ public class Goods implements Serializable {
     private String description;
     @NotBlank(message = "分类不能为空")
     private String category;
+    // 成色：全新 / 几乎全新 / 轻微使用痕迹 / 明显使用痕迹
+    private String conditionLevel;
     @NotNull(message = "价格不能为空")
     @DecimalMin(value = "0.01", message = "价格不能小于0.01")
     private BigDecimal price;

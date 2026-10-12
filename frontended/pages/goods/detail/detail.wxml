@@ -13,7 +13,10 @@
       <view class="text-lg text-bold">{{goods.title}}</view>
       <view class="flex-row flex-between mt-20">
         <view class="text-primary" style="font-size:44rpx;font-weight:700">¥{{goods.price}}</view>
-        <view class="tag tag-success">{{goods.status === 0 ? '在售' : goods.status === 1 ? '已售出' : '已下架'}}</view>
+        <view class="flex-row">
+          <view class="tag text-xs" style="margin-right:8rpx;background:#F0F7FF;color:#3A7BD5">{{goods.conditionLevel || '几乎全新'}}</view>
+          <view class="tag tag-success">{{goods.status === 0 ? '在售' : goods.status === 1 ? '已售出' : '已下架'}}</view>
+        </view>
       </view>
       <view class="flex-row mt-10 text-sm text-body">
         <text>{{goods.category}}</text>
@@ -26,7 +29,10 @@
           <view class="seller-avatar-text" wx:if="{{!seller.avatarUrl || seller._avatarError}}">{{seller.nickName ? seller.nickName[0] : '?'}}</view>
           <image class="seller-avatar" wx:else src="{{seller.avatarUrl}}" mode="aspectFill" binderror="onSellerAvatarError" />
           <view style="margin-left:12rpx">
-            <view class="text-sm text-bold">{{seller.nickName || '微信用户'}}</view>
+            <view class="flex-row" style="align-items:center">
+              <view class="text-sm text-bold">{{seller.nickName || '微信用户'}}</view>
+              <view class="tag text-xs" style="margin-left:10rpx;background:#FFF3E0;color:#E8890C">{{seller.creditScore >= 90 ? '信用极好' : (seller.creditScore >= 70 ? '信用良好' : (seller.creditScore ? '信用一般' : '信用待评估'))}}</view>
+            </view>
             <view class="text-xs text-body">卖家 · 用户ID: {{goods.userId}}</view>
           </view>
         </view>

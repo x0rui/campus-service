@@ -33,6 +33,10 @@
           <view class="tag tag-primary text-xs">{{item.category}}</view>
           <view class="text-primary text-bold">¥{{item.price}}</view>
         </view>
+        <view class="flex-row flex-between text-xs text-gray" style="margin-top:8rpx">
+          <text>{{item.conditionLevel || '几乎全新'}}</text>
+          <text>👀 {{item.browseCount || 0}}</text>
+        </view>
       </view>
     </view>
   </view>

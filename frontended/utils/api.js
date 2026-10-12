@@ -15,7 +15,9 @@ function request(url, method = 'GET', data = {}) {
 
       success(res) {
         // 1. 如果 HTTP 状态码是 401，说明 token 无效或过期
-        if (res.statusCode === 401) { // 未登录 → 跳登录页
+        // 1. 未登录/token 失效 → 清缓存并跳登录页
+        //    后端异常统一返回 HTTP 200 + body.code，所以两种都要判
+        if (res.statusCode === 401 || (res.data && res.data.code === 401)) {
           // 清除本地缓存和全局数据中的登录信息
           wx.removeStorageSync('token');
           wx.removeStorageSync('userInfo');

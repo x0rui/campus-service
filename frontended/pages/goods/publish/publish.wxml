@@ -24,6 +24,12 @@
       </picker>
     </view>
     <view class="form-group">
+      <view class="form-label">成色</view>
+      <picker mode="selector" range="{{conditions}}" value="{{conditionIndex}}" bindchange="onConditionChange">
+        <view class="form-input">{{conditions[conditionIndex]}}</view>
+      </picker>
+    </view>
+    <view class="form-group">
       <view class="form-label">价格 (元)</view>
       <input class="form-input" type="digit" placeholder="请输入价格" value="{{price}}" bindinput="onPriceInput" />
     </view>

@@ -78,7 +78,7 @@ Page({
     ctx.fillStyle = '#B2BEC3';
     ctx.font = '13px sans-serif';
     ctx.textBaseline = 'bottom';
-    ctx.fillText('校园多服务平台', w / 2, h - 16);
+    ctx.fillText('校园互助与学习资源共享', w / 2, h - 16);
     ctx.textAlign = 'left';
   },
 

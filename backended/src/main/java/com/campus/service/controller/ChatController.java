@@ -88,7 +88,7 @@ public class ChatController {
     @GetMapping("/sessions")
     public Result<List<String>> getSessions(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        if (userId == null) return Result.fail("请先登录");
+        if (userId == null) return Result.fail(401, "请先登录");
         return Result.ok(chatService.getUserSessions(userId));
     }
 
@@ -98,7 +98,7 @@ public class ChatController {
     @GetMapping("/conversations")
     public Result<List<ConversationDTO>> getConversations(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        if (userId == null) return Result.fail("请先登录");
+        if (userId == null) return Result.fail(401, "请先登录");
         return Result.ok(chatService.getConversations(userId));
     }
 

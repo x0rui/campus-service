@@ -1,8 +1,8 @@
 <view class="login-container">
   <view class="login-header">
     <view class="app-logo">🎓</view>
-    <view class="app-name">校园多服务平台</view>
-    <view class="app-desc">闲置交易 · 校园跑腿 · 组局社交</view>
+    <view class="app-name">校园互助与学习资源共享系统</view>
+    <view class="app-desc">闲置交易 · 跑腿代办 · 组局社团 · 校园圈 · 学习资源</view>
   </view>
   <view class="login-body">
     <button class="btn-primary login-btn" bindtap="handleLogin">

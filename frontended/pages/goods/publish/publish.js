@@ -9,6 +9,8 @@ Page({
     price: '',
     categoryIndex: 0,
     categories: ['电子产品', '书籍教材', '生活用品', '服饰鞋包', '运动健身', '数码配件', '其他'],
+    conditionIndex: 1,
+    conditions: ['全新', '几乎全新', '轻微使用痕迹', '明显使用痕迹'],
     publishing: false,
     isEdit: false,
     goodsId: null
@@ -35,7 +37,9 @@ Page({
         description: goods.description || '',
         price: goods.price ? String(goods.price) : '',
         images: images,
-        categoryIndex: categoryIndex >= 0 ? categoryIndex : 0
+        categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
+        conditionIndex: this.data.conditions.indexOf(goods.conditionLevel) >= 0
+          ? this.data.conditions.indexOf(goods.conditionLevel) : 1
       });
     } catch (e) {}
     wx.hideLoading();
@@ -81,6 +85,9 @@ Page({
   onCategoryChange(e) {
     const idx = parseInt(e.detail.value);
     this.setData({ categoryIndex: idx });
+  },
+  onConditionChange(e) {
+    this.setData({ conditionIndex: parseInt(e.detail.value) });
   },
 
   async generateAI() {
@@ -130,6 +137,7 @@ Page({
         description: this.data.description,
         price: parseFloat(this.data.price),
         category: this.data.categories[this.data.categoryIndex],
+        conditionLevel: this.data.conditions[this.data.conditionIndex],
         images: JSON.stringify(this.data.images)
       };
 

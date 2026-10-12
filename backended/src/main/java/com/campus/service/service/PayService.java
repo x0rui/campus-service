@@ -178,10 +178,11 @@ public class PayService {
             if (g == null) continue;
             o.setGoodsTitle(g.getTitle());
             String images = g.getImages();
-            if (images != null && images.length() > 2) {
-                int end = images.indexOf('"', 1);
-                int start = images.indexOf('"') + 1;
-                if (start > 0 && end > start) o.setGoodsImage(images.substring(start, end));
+            if (images != null) {
+                // images 存的是 JSON 数组字符串，形如 ["url1","url2"]，取第一个
+                String s = images.replace("[", "").replace("]", "").replace("\"", "").trim();
+                int comma = s.indexOf(',');
+                if (!s.isEmpty()) o.setGoodsImage(comma > 0 ? s.substring(0, comma).trim() : s);
             }
         }
         return list;
